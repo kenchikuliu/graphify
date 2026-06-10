@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>graphify 实测图文</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+	<style>
+		:root { --canvas:#f5efe6;
+		--paper:#fcf8f1;
+		--ink:#101720;
+		--muted:#5f6b76;
+		--line:#d7ccb9;
+		--accent:#1f5ed7;
+		--signal:#0d6d66;
+		--clay:#b45437;
+		--sun:#b88426;
+		--night:#0d1726;
+		--display:"IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+		--body:"IBM Plex Sans", "Segoe UI", sans-serif;
+		--mono:"IBM Plex Mono", Consolas, monospace;
+		--r-sm:8px;
+		--r-md:14px;
+		--r-lg:20px;
+		--space-xs:8px;
+		--space-sm:14px;
+		--space-md:22px;
+		--space-lg:34px;
+		--space-xl:48px; }
+		body { margin:0; color:var(--ink); background:var(--canvas); font-family:var(--body); line-height:1.78; }
+		body::before { content:""; position:fixed; inset:18px; border:1px solid rgba(16,23,32,.07); pointer-events:none; z-index:0; }
+		a { color:var(--accent); }
+		header { position:relative; padding:56px max(28px,calc((100vw - 1120px)/2)) 48px; background:
+			linear-gradient(180deg, rgba(245,239,230,.94), rgba(252,248,241,.92)),
+			repeating-linear-gradient(90deg, rgba(16,23,32,.03) 0 1px, transparent 1px 130px);
+			border-bottom:1px solid rgba(16,23,32,.08); overflow:hidden; }
+		header::after { content:""; position:absolute; right:-120px; top:56px; width:460px; height:460px; border-radius:999px; background:radial-gradient(circle, rgba(31,94,215,.12), transparent 68%); }
+		header .eyebrow { position:relative; display:inline-flex; align-items:center; gap:12px; color:var(--signal); font-weight:700; margin-bottom:16px; letter-spacing:.09em; text-transform:uppercase; }
+		header .eyebrow::before { content:""; width:26px; height:2px; background:var(--signal); }
+		header h1 { position:relative; max-width:1040px; margin:0; font-family:var(--display); font-size:clamp(56px,7vw,108px); line-height:.92; letter-spacing:0; text-transform:uppercase; }
+		header p { position:relative; max-width:760px; margin:24px 0 0; font-size:22px; color:var(--muted); font-weight:500; line-height:1.45; }
+		hero-strap, .hero-strap { position:relative; display:grid; grid-template-columns:1.1fr .9fr; gap:18px; margin-top:36px; }
+		hero-strap section, .hero-strap section { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.86); box-shadow:0 14px 36px rgba(16,23,32,.07); padding:18px 20px; }
+		hero-strap b, .hero-strap b { display:block; font-family:var(--display); font-size:24px; text-transform:uppercase; line-height:1; margin-bottom:12px; }
+		hero-strap p, .hero-strap p { margin:0; font-size:16px; color:var(--muted); }
+		main { position:relative; max-width:920px; margin:0 auto; padding:56px 24px 96px; z-index:1; }
+		h1 { margin:0 0 30px; font-family:var(--display); font-size:54px; line-height:.98; letter-spacing:0; text-transform:uppercase; }
+		h2 { margin:60px 0 16px; font-family:var(--display); font-size:38px; line-height:.98; letter-spacing:0; text-transform:uppercase; }
+		p, li { font-size:19px; color:#1f2c37; }
+		code { font-family:var(--mono); background:rgba(31,94,215,.08); padding:2px 5px; border-radius:5px; }
+		pre { padding:18px; border-radius:var(--r-md); background:#101824; color:#e5e7eb; overflow:auto; border:1px solid rgba(255,255,255,.08); }
+		pre code { background:transparent; padding:0; color:inherit; }
+		ul, ol { padding-left:24px; }
+		figure { margin:38px 0; border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); overflow:hidden; background:rgba(252,248,241,.9); box-shadow:0 14px 34px rgba(16,23,32,.07); }
+		figure button { display:block; width:100%; padding:0; border:0; cursor:zoom-in; background:transparent; }
+		figure img { display:block; width:100%; height:auto; }
+		figcaption { padding:12px 14px; color:var(--muted); font-size:14px; border-top:1px solid rgba(16,23,32,.08); background:rgba(255,255,255,.4); }
+		.callout { margin:28px 0 36px; padding:18px 20px; border:1px solid rgba(180,84,55,.22); background:rgba(180,84,55,.08); border-radius:var(--r-md); color:#6d3324; font-size:17px; line-height:1.6; }
+		.lightbox { position:fixed; inset:0; display:none; place-items:center; padding:28px; background:rgba(15,23,42,.86); z-index:100; }
+		.lightbox.open { display:grid; }
+		.lightbox img { max-width:96vw; max-height:92vh; border-radius:8px; box-shadow:0 22px 70px rgba(0,0,0,.42); }
+		@media (max-width: 900px) {
+			header { padding-left:24px; padding-right:24px; }
+			.hero-strap { grid-template-columns:1fr; }
+			header h1 { font-size:clamp(46px,13vw,72px); }
+			h1 { font-size:46px; }
+			h2 { font-size:34px; }
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="eyebrow">graphify field report</div>
+		<h1>AI 读项目缺的可能<br/>不是上下文，是地图</h1>
+		<p>这次按真实输出拆：先看 <code>graph.html</code>，再看 <code>GRAPH_REPORT.md</code>，再看 query 如何返回局部子图。</p>
+		<div class="hero-strap">
+			<section>
+				<b>核心判断</b>
+				<p>graphify 最值得讲的，不是它能“读很多文件”，而是它能把项目阅读变成一张可以追问的地图。</p>
+			</section>
+			<section>
+				<b>证据链</b>
+				<p>graph.html / GRAPH_REPORT.md / graph.json / query output。四份产物必须互相支撑，而不是只讲观点。</p>
+			</section>
+		</div>
+	</header>
+	<main>
+		<div class="callout">这篇不是“我看了 README 后的感受”，而是一次实测复盘：先看产物，再判断它是否真的适合放进 Agent 工作流。</div>
+		<h1>我把 graphify 的真实输出打开看了一遍：AI 缺的可能不是上下文，是地图</h1>
+<p>这版我不再写成 README 介绍，而是按实测证据链来拆 graphify。</p>
+<p>我用仓库里的 <code>worked/httpx</code> 样例看了四个产物：<code>graph.html</code>、<code>GRAPH_REPORT.md</code>、<code>graph.json</code> 和 <code>graphify query</code> 输出。这个样例的图谱是 144 个节点、330 条边、6 个社区。</p>
+<figure><button class="zoom" data-img="screenshots/01-graph-html.png" aria-label="open image"><img src="screenshots/01-graph-html.png" alt="graph.html 实际渲染" /></button><figcaption>graph.html 实际渲染</figcaption></figure>
+<h2>先看结果：它不是把 README 摘一遍</h2>
+<p>graphify 的重点不是“生成一张漂亮图”，而是把项目变成 Agent 可以先读、再追问、最后回到源码复核的结构。</p>
+<p>我会把它的输出拆成三层：</p>
+<ul><li><code>graph.html</code>：给人看的交互地图。</li><li><code>GRAPH_REPORT.md</code>：给 Agent 先读的路线图。</li><li><code>graph.json</code>：给 query、MCP、后续工具链复用的底层图。</li></ul>
+<figure><button class="zoom" data-img="screenshots/02-output-proof.png" aria-label="open image"><img src="screenshots/02-output-proof.png" alt="输出证据链" /></button><figcaption>输出证据链</figcaption></figure>
+<h2>GRAPH_REPORT.md 最像路线图</h2>
+<p>我最先看的不是安装命令，而是报告里的 god nodes。因为这些节点告诉你项目主线在哪里。</p>
+<p>在这个 httpx 样例里，排在前面的节点是：</p>
+<ol><li><code>Client</code> - 26 edges</li><li><code>AsyncClient</code> - 25 edges</li><li><code>Response</code> - 24 edges</li><li><code>exceptions.py</code> - 23 edges</li><li><code>Request</code> - 21 edges</li><li><code>BaseClient</code> - 18 edges</li></ol>
+<p>这比“文件树里有 auth.py、client.py、transport.py”更有用。文件树告诉你文件存在，图谱告诉你谁在连接谁。</p>
+<figure><button class="zoom" data-img="screenshots/03-report-proof.png" aria-label="open image"><img src="screenshots/03-report-proof.png" alt="报告里的主线节点" /></button><figcaption>报告里的主线节点</figcaption></figure>
+<h2>query 返回的是子图，不是一句摘要</h2>
+<p>我问的是：</p>
+<pre><code>graphify query &quot;why does Client connect transport auth URL and errors&quot;</code></pre>
+<p>返回结果不是一段笼统解释，而是 NODE 和 EDGE 列表，里面有来源文件、行号、关系和置信度。这个形态更适合真实开发：先拿局部结构，再回到源码验证。</p>
+<figure><button class="zoom" data-img="screenshots/04-query-client.png" aria-label="open image"><img src="screenshots/04-query-client.png" alt="query 输出" /></button><figcaption>query 输出</figcaption></figure>
+<h2>我最看重的是置信度</h2>
+<p>graphify 会把关系分成 <code>EXTRACTED</code> 和 <code>INFERRED</code>。这点比可视化本身更关键。</p>
+<p>如果一个工具只告诉我“我发现了关系”，我还要担心它是不是在编。但如果它明确区分哪些来自原文、哪些来自模型推断，那它就更适合接入 Agent 工作流。</p>
+<figure><button class="zoom" data-img="screenshots/05-confidence.png" aria-label="open image"><img src="screenshots/05-confidence.png" alt="关系置信度" /></button><figcaption>关系置信度</figcaption></figure>
+<h2>我会怎么发布这篇内容</h2>
+<p>视频结构应该这样走：</p>
+<ol><li>开场直接给结论：AI 缺的不是更长上下文，而是地图。</li><li>展示真实输出：graph.html、GRAPH_REPORT.md、graph.json、query。</li><li>放大 god nodes，让观众看到 Client / AsyncClient / Response 是主线。</li><li>用 query 输出证明它能按问题捞局部结构。</li><li>最后强调 EXTRACTED / INFERRED，这才是可复核的部分。</li></ol>
+<p>一句话结论：graphify 值得讲，不是因为它能把代码画成图，而是因为它把项目阅读变成了可追问、可复用、可复核的地图。</p>
+<p>Source: <a href="https://github.com/kenchikuliu/graphify">https://github.com/kenchikuliu/graphify</a></p>
+	</main>
+	<div class="lightbox" id="lightbox"><img alt="" /></div>
+	<script>
+		const box = document.getElementById("lightbox");
+		const boxImg = box.querySelector("img");
+		document.querySelectorAll("figure .zoom").forEach((button) => {
+			button.addEventListener("click", () => {
+				boxImg.src = button.dataset.img;
+				box.classList.add("open");
+			});
+		});
+		box.addEventListener("click", () => box.classList.remove("open"));
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Escape") box.classList.remove("open");
+		});
+	</script>
+</body>
+</html>

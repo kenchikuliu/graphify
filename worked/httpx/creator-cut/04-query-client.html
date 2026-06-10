@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+	<style>
+		:root { --canvas:#f5efe6;
+		--paper:#fcf8f1;
+		--ink:#101720;
+		--muted:#5f6b76;
+		--line:#d7ccb9;
+		--accent:#1f5ed7;
+		--signal:#0d6d66;
+		--clay:#b45437;
+		--sun:#b88426;
+		--night:#0d1726;
+		--display:"IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+		--body:"IBM Plex Sans", "Segoe UI", sans-serif;
+		--mono:"IBM Plex Mono", Consolas, monospace;
+		--r-sm:8px;
+		--r-md:14px;
+		--r-lg:20px;
+		--space-xs:8px;
+		--space-sm:14px;
+		--space-md:22px;
+		--space-lg:34px;
+		--space-xl:48px; }
+		body { margin:0; width:1365px; height:768px; overflow:hidden; background:#0f1723; font-family:var(--body); color:white; }
+		body::before { content:""; position:absolute; inset:20px; border:1px solid rgba(255,255,255,.08); pointer-events:none; }
+		.wrap { position:relative; padding:34px 46px; }
+		.kicker { display:inline-flex; align-items:center; gap:10px; margin-bottom:14px; color:#83d0c8; font:700 15px var(--body); letter-spacing:.08em; text-transform:uppercase; }
+		.kicker::before { content:""; width:24px; height:2px; background:#83d0c8; }
+		h1 { margin:0 0 18px; font-family:var(--display); font-size:54px; line-height:.97; letter-spacing:0; max-width:980px; text-transform:uppercase; }
+		.shell { border:1px solid rgba(255,255,255,.12); border-radius:var(--r-md); overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.32); background:#09111b; }
+		.bar { height:48px; background:#111b29; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:9px; padding:0 16px; }
+		.dot { width:12px; height:12px; border-radius:999px; background:#ef4444; box-shadow:22px 0 0 #f59e0b,44px 0 0 #22c55e; }
+		.cmd { color:#dbe5f2; margin-left:64px; font-size:15px; font-family:var(--mono); }
+		pre { margin:0; height:560px; padding:22px; overflow:hidden; white-space:pre-wrap; font-size:16px; line-height:1.46; color:#d1d7df; }
+		code { font-family:var(--mono); }
+		mark { color:#dbeafe; background:rgba(31,94,215,.34); border-radius:4px; padding:0 2px; }
+		.tag { color:#b8f0de; background:rgba(13,109,102,.18); border:1px solid rgba(13,109,102,.34); border-radius:5px; padding:0 4px; }
+		.note { position:absolute; right:48px; top:46px; padding:10px 12px; border:1px solid rgba(191,84,55,.28); background:rgba(191,84,55,.12); color:#ffcfbf; border-radius:var(--r-sm); font-size:13px; font-family:var(--mono); }
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="kicker">subgraph query</div>
+		<h1>查询输出不是一句摘要<br/>而是一段可追溯的子图</h1>
+		<div class="note">question -> nodes -> edges -> source</div>
+		<div class="shell">
+			<div class="bar"><span class="dot"></span><span class="cmd">graphify query "why does Client connect transport auth URL and errors"</span></div>
+			<pre><code>﻿NODE <mark>Client</mark> [src=worked/httpx/raw/client.py loc=L70 community=2]
+NODE <mark>AsyncClient</mark> [src=worked/httpx/raw/client.py loc=L123 community=2]
+NODE <mark>Response</mark> [src=worked/httpx/raw/models.py loc=L80 community=1]
+NODE exceptions.py [src=worked/httpx/raw/exceptions.py loc=L1 community=4]
+NODE <mark>Request</mark> [src=worked/httpx/raw/models.py loc=L68 community=1]
+NODE BaseClient [src=worked/httpx/raw/client.py loc=L31 community=2]
+NODE <mark>HTTPTransport</mark> [src=worked/httpx/raw/transport.py loc=L59 community=0]
+NODE <mark>BaseTransport</mark> [src=worked/httpx/raw/transport.py loc=L10 community=0]
+NODE AsyncHTTPTransport [src=worked/httpx/raw/transport.py loc=L89 community=0]
+NODE Limits [src=worked/httpx/raw/client.py loc=L24 community=1]
+NODE <mark>Timeout</mark> [src=worked/httpx/raw/client.py loc=L16 community=1]
+NODE TimeoutException [src=worked/httpx/raw/exceptions.py loc=L22 community=4]
+NODE Auth [src=worked/httpx/raw/auth.py loc=L12 community=1]
+NODE models.py [src=worked/httpx/raw/models.py loc=L1 community=3]
+NODE TransportError [src=worked/httpx/raw/exceptions.py loc=L18 community=4]
+NODE BasicAuth [src=worked/httpx/raw/auth.py loc=L20 community=1]
+NODE ConnectionPool [src=worked/httpx/raw/transport.py loc=L30 community=0]
+NODE client.py [src=worked/httpx/raw/client.py loc=L1 community=1]
+NODE ProxyTransport [src=worked/httpx/raw/transport.py loc=L116 community=0]
+NODE transport.py [src=worked/httpx/raw/transport.py loc=L1 community=0]
+NODE ConnectError [src=worked/httpx/raw/exceptions.py loc=L46 community=0]
+NODE MockTransport [src=worked/httpx/raw/transport.py loc=L103 community=0]
+NODE AsyncBaseTransport [src=worked/httpx/raw/transport.py loc=L20 community=0]
+NODE DigestAuth [src=worked/httpx/raw/auth.py loc=L46 community=1]
+NODE HTTPStatusError [src=worked/httpx/raw/exceptions.py loc=L78 community=4]
+NODE BearerAuth [src=worked/httpx/raw/auth.py loc=L35 community=1]
+NODE NetworkError [src=worked/httpx/raw/exceptions.py loc=L42 community=4]
+NODE RequestError [src=worked/httpx/raw/exceptions.py loc=L14 community=4]
+NODE NetRCAuth [src=worked/httpx/raw/auth.py loc=L100 community=1]
+NODE .handle_request() [src=worked/httpx/raw/transport.py loc=L70 community=0]
+NODE .__init__() [src=worked/httpx/raw/models.py loc=L69 community=3]
+NODE ._get_connection_key() [src=worked/httpx/raw/transport.py loc=L41 community=0]
+NODE .return_connection() [src=worked/httpx/raw/transport.py loc=L50 community=0]
+NODE .get_connection() [src=worked/httpx/raw/transport.py loc=L46 community=0]</code></pre>
+		</div>
+	</div>
+</body>
+</html>

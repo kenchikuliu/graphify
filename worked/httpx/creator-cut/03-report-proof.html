@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+	<style>
+		:root { --canvas:#f5efe6;
+		--paper:#fcf8f1;
+		--ink:#101720;
+		--muted:#5f6b76;
+		--line:#d7ccb9;
+		--accent:#1f5ed7;
+		--signal:#0d6d66;
+		--clay:#b45437;
+		--sun:#b88426;
+		--night:#0d1726;
+		--display:"IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+		--body:"IBM Plex Sans", "Segoe UI", sans-serif;
+		--mono:"IBM Plex Mono", Consolas, monospace;
+		--r-sm:8px;
+		--r-md:14px;
+		--r-lg:20px;
+		--space-xs:8px;
+		--space-sm:14px;
+		--space-md:22px;
+		--space-lg:34px;
+		--space-xl:48px; }
+		body { margin:0; width:1365px; height:768px; overflow:hidden; background:
+			linear-gradient(180deg, rgba(252,248,241,.98), rgba(245,239,230,.98));
+			font-family:var(--body); color:var(--ink); }
+		body::before { content:""; position:absolute; inset:28px; border:1px solid rgba(16,23,32,.08); pointer-events:none; }
+		.wrap { position:relative; padding:34px 46px; }
+		.kicker { display:inline-flex; align-items:center; gap:12px; margin-bottom:16px; color:var(--signal); font:700 15px var(--body); letter-spacing:.08em; text-transform:uppercase; }
+		.kicker::before { content:""; width:28px; height:2px; background:var(--signal); }
+		h1 { margin:0 0 18px; font-family:var(--display); font-size:54px; line-height:.96; letter-spacing:0; max-width:1120px; text-transform:uppercase; }
+		.grid { display:grid; grid-template-columns:.88fr 1.12fr; gap:18px; align-items:start; }
+		.card { border:1px solid var(--line); background:rgba(252,248,241,.96); border-radius:var(--r-md); box-shadow:0 14px 38px rgba(16,23,32,.08); padding:20px; }
+		.card h2 { margin:0 0 14px; font-family:var(--display); font-size:27px; text-transform:uppercase; letter-spacing:.01em; }
+		.summary { display:grid; gap:12px; }
+		.pill { border:1px solid rgba(16,23,32,.08); border-left:5px solid var(--accent); border-radius:var(--r-sm); padding:13px 14px; font-size:18px; font-weight:700; background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(252,248,241,.95)); }
+		ol { margin:0; padding-left:24px; columns:1; }
+		li { margin:8px 0; font-size:19px; line-height:1.42; }
+		code { color:var(--accent); font-weight:700; background:rgba(31,94,215,.09); border-radius:5px; padding:2px 5px; font-family:var(--mono); }
+		.surprises { margin-top:20px; display:grid; gap:10px; }
+		.surprise { padding:13px 14px; border-radius:var(--r-sm); background:rgba(180,84,55,.08); border:1px solid rgba(180,84,55,.18); color:#6f3321; font-size:17px; line-height:1.45; }
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="kicker">agent route map</div>
+		<h1>GRAPH_REPORT.md 先告诉 Agent<br/>项目主线在哪里</h1>
+		<div class="grid">
+			<section class="card">
+				<h2>Summary</h2>
+				<div class="summary">
+					<div class="pill">144 nodes · 330 edges · 6 communities detected</div>
+<div class="pill">Extraction: 53% EXTRACTED · 47% INFERRED · 0% AMBIGUOUS</div>
+<div class="pill">Token cost: 0 input · 0 output</div>
+				</div>
+			</section>
+			<section class="card">
+				<h2>God Nodes</h2>
+				<ol>
+					<li><code>Client</code> - 26 edges</li>
+<li><code>AsyncClient</code> - 25 edges</li>
+<li><code>Response</code> - 24 edges</li>
+<li><code>Request</code> - 21 edges</li>
+<li><code>BaseClient</code> - 18 edges</li>
+<li><code>HTTPTransport</code> - 17 edges</li>
+<li><code>BaseTransport</code> - 16 edges</li>
+<li><code>AsyncHTTPTransport</code> - 15 edges</li>
+<li><code>Headers</code> - 15 edges</li>
+<li><code>Timeout</code> - 14 edges</li>
+				</ol>
+				<div class="surprises">
+					<div class="surprise"><code>Timeout</code> --uses--> <code>URL</code>  [INFERRED]</div>
+<div class="surprise"><code>Timeout</code> --uses--> <code>Headers</code>  [INFERRED]</div>
+<div class="surprise"><code>Timeout</code> --uses--> <code>Cookies</code>  [INFERRED]</div>
+<div class="surprise"><code>Timeout</code> --uses--> <code>BaseTransport</code>  [INFERRED]</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>

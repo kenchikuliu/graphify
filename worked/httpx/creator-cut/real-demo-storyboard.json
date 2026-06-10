@@ -1,0 +1,337 @@
+{
+  "voiceProvider": "elevenlabs",
+  "scenes": [
+    {
+      "id": "hook",
+      "image": "screenshots/01-graph-html.png",
+      "kicker": "实测判断",
+      "title": "AI 读大项目缺的不是更长上下文",
+      "subtitle": "它先需要一张能追问的地图。",
+      "caption": "我这版直接看 graphify 的真实输出：graph.html、GRAPH_REPORT.md、graph.json 和 query 结果。",
+      "narration": "这一版我不再复述 README，直接看 graphify 的真实输出。我的判断是：AI 读大项目迷路，不一定是上下文不够，它先需要一张能追问的地图。",
+      "focus": {
+        "x": 272,
+        "y": 126,
+        "w": 612,
+        "h": 438
+      },
+      "cursor": {
+        "from": [
+          720,
+          240
+        ],
+        "to": [
+          620,
+          360
+        ]
+      },
+      "cameraBias": {
+        "startDriftX": 58,
+        "startDriftY": 28,
+        "centerX": -28,
+        "centerY": -16,
+        "maxScale": 1.24,
+        "fillX": 0.76,
+        "fillY": 0.8,
+        "pushIn": 0.16
+      },
+      "durationSec": 9.720917
+    },
+    {
+      "id": "outputs",
+      "image": "screenshots/02-output-proof.png",
+      "kicker": "证据链",
+      "title": "我只认这四个产物",
+      "subtitle": "图给人看，报告给 Agent 定向，JSON 给查询。",
+      "caption": "这次用 worked/httpx 示例：144 nodes、330 edges、6 communities，报告和 JSON 统计一致。",
+      "narration": "我只认这四个产物。graph 点 html 给人点开看，GRAPH_REPORT 点 md 给 Agent 定向，graph 点 json 作为查询底座，再加一条 graphify query 的结果。这个 httpx 示例是 144 个节点，330 条边，6 个社区。",
+      "focus": {
+        "x": 58,
+        "y": 313,
+        "w": 690,
+        "h": 412
+      },
+      "cursor": {
+        "from": [
+          175,
+          315
+        ],
+        "to": [
+          535,
+          455
+        ]
+      },
+      "cameraBias": {
+        "startDriftX": -42,
+        "startDriftY": 26,
+        "centerY": 22,
+        "maxScale": 1.16,
+        "fillX": 0.84,
+        "fillY": 0.84,
+        "pushIn": 0.14
+      },
+      "durationSec": 16.425125
+    },
+    {
+      "id": "report",
+      "image": "screenshots/03-report-proof.png",
+      "kicker": "报告",
+      "title": "GRAPH_REPORT.md 像一张读项目路线图",
+      "subtitle": "先告诉你 god nodes，再告诉你哪些连接值得怀疑。",
+      "caption": "Client、AsyncClient、Response、Request 这些节点被排在最前面，Agent 不必从文件树盲扫。",
+      "narration": "GRAPH_REPORT 点 md 最适合给 Agent 先读。它先把 god nodes 排出来，Client、AsyncClient、Response、Request 都在前面。也就是说，Agent 不必从文件树盲扫，而是先知道架构主线在哪里。",
+      "focus": {
+        "x": 620,
+        "y": 198,
+        "w": 688,
+        "h": 472
+      },
+      "cursor": {
+        "from": [
+          1030,
+          185
+        ],
+        "to": [
+          890,
+          335
+        ]
+      },
+      "cameraBias": {
+        "startDriftX": 38,
+        "startDriftY": 14,
+        "centerX": 14,
+        "centerY": -12,
+        "maxScale": 1.2,
+        "fillX": 0.84,
+        "fillY": 0.82,
+        "pushIn": 0.14
+      },
+      "durationSec": 14.170957999999999
+    },
+    {
+      "id": "graph",
+      "image": "screenshots/01-graph-html.png",
+      "kicker": "可视化",
+      "title": "graph.html 不是装饰图",
+      "subtitle": "右侧社区列表让你直接看模块边界。",
+      "caption": "中心的大节点和右侧社区一起看，能快速发现 Client 如何跨 transport、auth、models 和 errors。",
+      "narration": "graph 点 html 也不是装饰图。你看右侧社区列表，再看中心的大节点，就能很快发现 Client 是怎么跨 transport、auth、models 和 errors 的。这个画面比单纯看目录更像地图。",
+      "focus": {
+        "x": 1092,
+        "y": 194,
+        "w": 242,
+        "h": 212
+      },
+      "cameraBox": {
+        "x": 842,
+        "y": 148,
+        "w": 482,
+        "h": 356
+      },
+      "cursor": {
+        "from": [
+          1120,
+          250
+        ],
+        "to": [
+          1165,
+          422
+        ]
+      },
+      "cameraBias": {
+        "startDriftX": 62,
+        "startDriftY": -28,
+        "centerX": 30,
+        "centerY": -8,
+        "maxScale": 1.26,
+        "fillX": 0.72,
+        "fillY": 0.8,
+        "pushIn": 0.18
+      },
+      "durationSec": 13.278917
+    },
+    {
+      "id": "query",
+      "image": "screenshots/04-query-client.png",
+      "kicker": "查询",
+      "title": "query 返回的是子图，不是一句漂亮摘要",
+      "subtitle": "NODE 和 EDGE 都带来源、位置和关系。",
+      "caption": "这就适合接到真实工作流：先拿局部结构，再回到源码复核。",
+      "narration": "更关键的是 query。它返回的不是一句漂亮摘要，而是一段子图。NODE 有来源文件和行号，EDGE 有关系和置信标记。真实工作流里，你可以先拿局部结构，再回到源码复核。",
+      "focus": {
+        "x": 56,
+        "y": 214,
+        "w": 1228,
+        "h": 218
+      },
+      "focusVisible": false,
+      "cameraBox": {
+        "x": 44,
+        "y": 218,
+        "w": 1172,
+        "h": 196
+      },
+      "selection": {
+        "x": 62,
+        "y": 262,
+        "w": 504,
+        "h": 66
+      },
+      "selectionLines": [
+        {
+          "x": 64,
+          "y": 260,
+          "w": 452,
+          "h": 34,
+          "delay": 0.18,
+          "duration": 0.34
+        },
+        {
+          "x": 64,
+          "y": 292,
+          "w": 498,
+          "h": 34,
+          "delay": 0.36,
+          "duration": 0.4
+        }
+      ],
+      "selectionTheme": "dark",
+      "selectionDom": {
+        "x": 66,
+        "y": 260,
+        "w": 760,
+        "h": 62,
+        "fontSize": 16,
+        "lineHeight": 1.46,
+        "text": "NODE Client [src=worked/httpx/raw/client.py loc=L70 community=2]\nNODE AsyncClient [src=worked/httpx/raw/client.py loc=L123 community=2]",
+        "delay": 0.4,
+        "duration": 0.68,
+        "theme": "dark"
+      },
+      "cursor": {
+        "from": [
+          170,
+          270
+        ],
+        "to": [
+          825,
+          280
+        ]
+      },
+      "cameraBias": {
+        "startDriftX": -72,
+        "startDriftY": 12,
+        "centerY": -6,
+        "maxScale": 1.26,
+        "fillX": 0.82,
+        "fillY": 0.72,
+        "pushIn": 0.18
+      },
+      "durationSec": 12.76425
+    },
+    {
+      "id": "confidence",
+      "image": "screenshots/05-confidence.png",
+      "kicker": "我最看重",
+      "title": "关系有置信度，才方便复核",
+      "subtitle": "EXTRACTED 和 INFERRED 分开，减少幻觉污染。",
+      "caption": "这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。",
+      "narration": "我最看重的是置信度。EXTRACTED 是原文抽到的，INFERRED 是模型推断的。一个工具愿意把这两类分开，才适合给 AI assistant 用，因为你知道哪些地方需要复核。",
+      "focus": {
+        "x": 704,
+        "y": 246,
+        "w": 582,
+        "h": 294
+      },
+      "focusVisible": false,
+      "cameraBox": {
+        "x": 706,
+        "y": 248,
+        "w": 568,
+        "h": 202
+      },
+      "selection": {
+        "x": 712,
+        "y": 307,
+        "w": 512,
+        "h": 66
+      },
+      "selectionLines": [
+        {
+          "x": 712,
+          "y": 306,
+          "w": 492,
+          "h": 32,
+          "delay": 0.2,
+          "duration": 0.32
+        },
+        {
+          "x": 712,
+          "y": 338,
+          "w": 454,
+          "h": 32,
+          "delay": 0.38,
+          "duration": 0.34
+        }
+      ],
+      "selectionTheme": "light",
+      "cursor": {
+        "from": [
+          890,
+          348
+        ],
+        "to": [
+          1210,
+          348
+        ]
+      },
+      "cameraBias": {
+        "startDriftX": -58,
+        "startDriftY": 18,
+        "centerX": 18,
+        "centerY": -2,
+        "maxScale": 1.26,
+        "fillX": 0.82,
+        "fillY": 0.72,
+        "pushIn": 0.18
+      },
+      "durationSec": 11.686917
+    },
+    {
+      "id": "close",
+      "image": "screenshots/02-output-proof.png",
+      "kicker": "发布角度",
+      "title": "这篇就按“实测证据链”来写",
+      "subtitle": "先结果，再报告，再查询，最后讲接入方式。",
+      "caption": "一句话结论：给 Agent 地图，而不是无休止塞上下文。",
+      "narration": "所以这篇图文和视频，我会按实测证据链来写：先看结果，再看报告，再看查询，最后讲怎么接到 Agent 工作流。结论就一句话：给 Agent 地图，而不是无休止塞上下文。",
+      "focus": {
+        "x": 78,
+        "y": 617,
+        "w": 646,
+        "h": 108
+      },
+      "cursor": {
+        "from": [
+          540,
+          580
+        ],
+        "to": [
+          310,
+          590
+        ]
+      },
+      "cameraBias": {
+        "startDriftX": 24,
+        "startDriftY": 32,
+        "centerX": -12,
+        "centerY": 18,
+        "maxScale": 1.14,
+        "fillX": 0.82,
+        "fillY": 0.72,
+        "pushIn": 0.12
+      },
+      "durationSec": 12.369667
+    }
+  ]
+}

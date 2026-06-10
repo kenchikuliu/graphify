@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>graphify real demo cut</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+	<style>
+		:root { --canvas:#f5efe6;
+		--paper:#fcf8f1;
+		--ink:#101720;
+		--muted:#5f6b76;
+		--line:#d7ccb9;
+		--accent:#1f5ed7;
+		--signal:#0d6d66;
+		--clay:#b45437;
+		--sun:#b88426;
+		--night:#0d1726;
+		--display:"IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+		--body:"IBM Plex Sans", "Segoe UI", sans-serif;
+		--mono:"IBM Plex Mono", Consolas, monospace;
+		--r-sm:8px;
+		--r-md:14px;
+		--r-lg:20px;
+		--space-xs:8px;
+		--space-sm:14px;
+		--space-md:22px;
+		--space-lg:34px;
+		--space-xl:48px; }
+		* { box-sizing:border-box; }
+		body { margin:0; overflow:hidden; background:var(--canvas); font-family:var(--body); color:var(--ink); }
+		.stage { position:relative; width:1280px; height:720px; overflow:hidden; background:
+			linear-gradient(180deg, rgba(245,239,230,.98), rgba(252,248,241,.94)),
+			repeating-linear-gradient(90deg, rgba(16,23,32,.025) 0 1px, transparent 1px 116px); }
+		.stage::before { content:""; position:absolute; inset:18px; border:1px solid rgba(16,23,32,.08); }
+		.stage::after { content:""; position:absolute; inset:0; background:
+			radial-gradient(circle at 83% 16%, rgba(31,94,215,.10), transparent 24%),
+			radial-gradient(circle at 12% 78%, rgba(13,109,102,.10), transparent 21%); pointer-events:none; }
+		.brand { position:absolute; left:36px; top:24px; display:flex; align-items:center; gap:12px; color:var(--signal); font-size:13px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; z-index:20; }
+		.brand i { width:22px; height:2px; background:var(--signal); }
+		.brand small { color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.12em; }
+		.frame { position:absolute; left:38px; top:96px; width:805px; height:453px; border-radius:var(--r-md); overflow:hidden; background:white; border:1px solid rgba(16,23,32,.10); box-shadow:0 28px 76px rgba(15,23,42,.16); z-index:2; }
+		.viewport { position:absolute; inset:0; overflow:hidden; background:#0f1723; }
+		.media-scene { position:absolute; left:0; top:0; width:1365px; height:768px; transform-origin:top left; will-change:transform; transition:transform var(--scene-motion,7s) cubic-bezier(.16,.82,.22,1); }
+		.media-scene img { position:absolute; inset:0; width:1365px; height:768px; object-fit:cover; object-position:left top; filter:saturate(1.04) contrast(1.02); }
+		.frame.fade { opacity:0; transform:translateY(18px) scale(.984) rotate(-.35deg); transition:opacity .36s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+		.stage.scene-on .frame.fade { opacity:1; transform:translateY(0) scale(1) rotate(0deg); }
+		.panel { position:absolute; right:34px; top:76px; width:382px; min-height:418px; border:1px solid rgba(16,23,32,.10); border-radius:var(--r-md); background:rgba(252,248,241,.92); box-shadow:0 20px 56px rgba(15,23,42,.12); padding:24px 24px 22px; z-index:9; overflow:hidden; }
+		.panel::before { content:""; position:absolute; top:0; left:0; width:100%; height:6px; background:linear-gradient(90deg,var(--accent),var(--signal),var(--sun)); }
+		.panel::after { content:"field note"; position:absolute; right:24px; bottom:20px; color:rgba(16,23,32,.16); font-family:var(--display); font-size:44px; text-transform:uppercase; line-height:.9; pointer-events:none; }
+		.panel.fade { opacity:0; transform:translateX(26px) translateY(12px); transition:opacity .34s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+		.stage.scene-on .panel.fade { opacity:1; transform:translateX(0) translateY(0); }
+		.kicker { display:inline-flex; align-items:center; gap:10px; margin-bottom:16px; color:var(--signal); font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+		.kicker::before { content:""; width:20px; height:2px; background:var(--signal); }
+		h1 { margin:0; font-family:var(--display); font-size:44px; line-height:.96; letter-spacing:0; text-transform:uppercase; }
+		.subtitle { margin:16px 0 0; color:#1d2732; font-size:20px; line-height:1.34; font-weight:600; max-width:295px; }
+		.caption { margin:22px 0 0; color:var(--muted); font-size:15px; line-height:1.62; max-width:292px; }
+		.focus, .selection, .selection-dom { position:absolute; left:var(--x); top:var(--y); width:var(--w); height:var(--h); z-index:6; pointer-events:none; opacity:0; transform:scale(.965); }
+		.focus { border:4px solid rgba(31,94,215,.8); border-radius:16px; box-shadow:0 0 0 10px rgba(31,94,215,.08), 0 18px 40px rgba(31,94,215,.14); animation:focusPulse 1.7s ease-in-out infinite; }
+		.selection { background:transparent; box-shadow:none; overflow:visible; }
+		.selection-line {
+			position:absolute;
+			left:var(--lx);
+			top:var(--ly);
+			width:var(--lw);
+			height:var(--lh);
+			border-radius:4px;
+			opacity:0;
+			transform:scaleX(.04);
+			transform-origin:left center;
+			box-shadow:0 2px 8px rgba(19,56,151,.14);
+			transition:
+				opacity .14s ease var(--delay,0s),
+				transform var(--duration,.36s) cubic-bezier(.22,.82,.2,1) var(--delay,0s),
+				filter .22s ease var(--delay,0s);
+			filter:saturate(.96) brightness(.98);
+		}
+		.selection-line::after {
+			content:"";
+			position:absolute;
+			right:-6px;
+			top:50%;
+			width:10px;
+			height:10px;
+			border-radius:999px;
+			background:inherit;
+			transform:translateY(-50%);
+			opacity:.9;
+		}
+		.selection[data-theme="dark"] .selection-line {
+			background:linear-gradient(90deg, rgba(82,134,255,.72), rgba(82,134,255,.62));
+			mix-blend-mode:screen;
+		}
+		.selection[data-theme="light"] .selection-line,
+		.selection:not([data-theme]) .selection-line {
+			background:linear-gradient(90deg, rgba(61,123,255,.34), rgba(61,123,255,.28));
+		}
+		.selection[data-theme="light"] .selection-line { box-shadow:0 2px 8px rgba(61,123,255,.1); }
+		.selection-dom {
+			overflow:hidden;
+			color:transparent;
+			white-space:pre-wrap;
+			font-family:var(--mono);
+			background:transparent;
+		}
+		.selection-dom .selection-dom-text {
+			position:absolute;
+			inset:0;
+			padding:0;
+			margin:0;
+			font-family:inherit;
+			font-size:var(--dom-font-size,16px);
+			line-height:var(--dom-line-height,1.46);
+			white-space:pre-wrap;
+			letter-spacing:0;
+			user-select:none;
+			-webkit-user-select:none;
+			color:transparent;
+		}
+		.selection-dom[data-theme="light"] .selection-dom-text { color:transparent; }
+		.selection-dom .selection-dom-text::selection { background:rgba(79,131,255,.72); color:transparent; }
+		.selection-dom[data-theme="light"] .selection-dom-text::selection { background:rgba(79,131,255,.34); color:transparent; }
+		.stage.scene-on .focus, .stage.scene-on .selection, .stage.scene-on .selection-dom { opacity:1; transform:scale(1); transition:opacity .22s ease .24s, transform .34s ease .24s; }
+		.stage.scene-on .selection .selection-line { opacity:1; transform:scaleX(1); filter:saturate(1.04) brightness(1.02); }
+		.cursor { position:absolute; z-index:30; width:34px; height:34px; left:var(--cx,690px); top:var(--cy,300px); filter:drop-shadow(0 8px 11px rgba(15,23,42,.35)); transition:left .9s cubic-bezier(.18,.84,.22,1),top .9s cubic-bezier(.18,.84,.22,1); }
+		.cursor::before { content:""; position:absolute; width:0; height:0; border-left:22px solid #111827; border-bottom:29px solid transparent; }
+		.cursor::after { content:""; position:absolute; left:4px; top:5px; width:0; height:0; border-left:14px solid white; border-bottom:19px solid transparent; }
+		.cursor-trail { position:absolute; z-index:29; width:18px; height:18px; border-radius:999px; background:radial-gradient(circle, rgba(31,94,215,.18), transparent 68%); left:var(--trail-x,690px); top:var(--trail-y,300px); transform:translate(-50%,-50%); transition:left 1.02s cubic-bezier(.18,.84,.22,1), top 1.02s cubic-bezier(.18,.84,.22,1), opacity .3s ease; opacity:.85; }
+		.rule { position:absolute; left:868px; top:110px; width:1px; height:502px; background:linear-gradient(180deg, transparent, rgba(16,23,32,.14), transparent); z-index:9; }
+		.flash { position:absolute; inset:0; background:linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.24) 18%, rgba(255,255,255,.06) 28%, transparent 40%); transform:translateX(-120%); opacity:0; pointer-events:none; z-index:18; }
+		.stage.scene-on .flash { animation:sceneFlash .62s ease; }
+		.progress { position:absolute; left:38px; right:38px; bottom:18px; height:5px; border-radius:999px; background:rgba(16,23,32,.10); overflow:hidden; z-index:20; }
+		.progress span { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--signal),var(--accent),var(--sun)); }
+		.fade { opacity:0; transform:translateY(12px); transition:opacity .3s ease, transform .36s ease; }
+		.stage.scene-on .fade { opacity:1; transform:translateY(0); }
+		@keyframes focusPulse {
+			0%,100% { box-shadow:0 0 0 10px rgba(31,94,215,.08), 0 18px 40px rgba(31,94,215,.14); }
+			50% { box-shadow:0 0 0 14px rgba(31,94,215,.07), 0 24px 44px rgba(31,94,215,.18); }
+		}
+		@keyframes sceneFlash {
+			0% { opacity:0; transform:translateX(-120%); }
+			25% { opacity:1; }
+			100% { opacity:0; transform:translateX(145%); }
+		}
+	</style>
+</head>
+<body>
+	<div class="stage">
+		<div class="brand"><i></i> graphify field report <small>volume 01</small></div>
+		<div class="frame fade">
+			<div class="viewport">
+				<div class="media-scene">
+					<img alt="" />
+					<div class="focus"></div>
+					<div class="selection"></div>
+					<div class="selection-dom"></div>
+				</div>
+			</div>
+		</div>
+		<div class="rule"></div>
+		<div class="panel fade">
+			<div class="kicker"></div>
+			<h1></h1>
+			<div class="subtitle"></div>
+			<div class="caption"></div>
+		</div>
+		<div class="flash"></div>
+		<div class="cursor-trail"></div>
+		<div class="cursor"></div>
+		<div class="progress"><span></span></div>
+	</div>
+	<script>
+		const SOURCE_W = 1365;
+		const SOURCE_H = 768;
+		const VIEW_W = 805;
+		const VIEW_H = 453;
+		const FIT_SCALE = Math.max(VIEW_W / SOURCE_W, VIEW_H / SOURCE_H);
+		const scenes = [{"id":"hook","image":"screenshots/01-graph-html.png","kicker":"实测判断","title":"AI 读大项目缺的不是更长上下文","subtitle":"它先需要一张能追问的地图。","caption":"我这版直接看 graphify 的真实输出：graph.html、GRAPH_REPORT.md、graph.json 和 query 结果。","narration":"这一版我不再复述 README，直接看 graphify 的真实输出。我的判断是：AI 读大项目迷路，不一定是上下文不够，它先需要一张能追问的地图。","focus":{"x":272,"y":126,"w":612,"h":438},"cursor":{"from":[720,240],"to":[620,360]},"cameraBias":{"startDriftX":58,"startDriftY":28,"centerX":-28,"centerY":-16,"maxScale":1.24,"fillX":0.76,"fillY":0.8,"pushIn":0.16},"durationSec":9.720917},{"id":"outputs","image":"screenshots/02-output-proof.png","kicker":"证据链","title":"我只认这四个产物","subtitle":"图给人看，报告给 Agent 定向，JSON 给查询。","caption":"这次用 worked/httpx 示例：144 nodes、330 edges、6 communities，报告和 JSON 统计一致。","narration":"我只认这四个产物。graph 点 html 给人点开看，GRAPH_REPORT 点 md 给 Agent 定向，graph 点 json 作为查询底座，再加一条 graphify query 的结果。这个 httpx 示例是 144 个节点，330 条边，6 个社区。","focus":{"x":58,"y":313,"w":690,"h":412},"cursor":{"from":[175,315],"to":[535,455]},"cameraBias":{"startDriftX":-42,"startDriftY":26,"centerY":22,"maxScale":1.16,"fillX":0.84,"fillY":0.84,"pushIn":0.14},"durationSec":16.425125},{"id":"report","image":"screenshots/03-report-proof.png","kicker":"报告","title":"GRAPH_REPORT.md 像一张读项目路线图","subtitle":"先告诉你 god nodes，再告诉你哪些连接值得怀疑。","caption":"Client、AsyncClient、Response、Request 这些节点被排在最前面，Agent 不必从文件树盲扫。","narration":"GRAPH_REPORT 点 md 最适合给 Agent 先读。它先把 god nodes 排出来，Client、AsyncClient、Response、Request 都在前面。也就是说，Agent 不必从文件树盲扫，而是先知道架构主线在哪里。","focus":{"x":620,"y":198,"w":688,"h":472},"cursor":{"from":[1030,185],"to":[890,335]},"cameraBias":{"startDriftX":38,"startDriftY":14,"centerX":14,"centerY":-12,"maxScale":1.2,"fillX":0.84,"fillY":0.82,"pushIn":0.14},"durationSec":14.170957999999999},{"id":"graph","image":"screenshots/01-graph-html.png","kicker":"可视化","title":"graph.html 不是装饰图","subtitle":"右侧社区列表让你直接看模块边界。","caption":"中心的大节点和右侧社区一起看，能快速发现 Client 如何跨 transport、auth、models 和 errors。","narration":"graph 点 html 也不是装饰图。你看右侧社区列表，再看中心的大节点，就能很快发现 Client 是怎么跨 transport、auth、models 和 errors 的。这个画面比单纯看目录更像地图。","focus":{"x":1092,"y":194,"w":242,"h":212},"cameraBox":{"x":842,"y":148,"w":482,"h":356},"cursor":{"from":[1120,250],"to":[1165,422]},"cameraBias":{"startDriftX":62,"startDriftY":-28,"centerX":30,"centerY":-8,"maxScale":1.26,"fillX":0.72,"fillY":0.8,"pushIn":0.18},"durationSec":13.278917},{"id":"query","image":"screenshots/04-query-client.png","kicker":"查询","title":"query 返回的是子图，不是一句漂亮摘要","subtitle":"NODE 和 EDGE 都带来源、位置和关系。","caption":"这就适合接到真实工作流：先拿局部结构，再回到源码复核。","narration":"更关键的是 query。它返回的不是一句漂亮摘要，而是一段子图。NODE 有来源文件和行号，EDGE 有关系和置信标记。真实工作流里，你可以先拿局部结构，再回到源码复核。","focus":{"x":56,"y":214,"w":1228,"h":218},"focusVisible":false,"cameraBox":{"x":44,"y":218,"w":1172,"h":196},"selection":{"x":62,"y":262,"w":504,"h":66},"selectionLines":[{"x":64,"y":260,"w":452,"h":34,"delay":0.18,"duration":0.34},{"x":64,"y":292,"w":498,"h":34,"delay":0.36,"duration":0.4}],"selectionTheme":"dark","selectionDom":{"x":66,"y":260,"w":760,"h":62,"fontSize":16,"lineHeight":1.46,"text":"NODE Client [src=worked/httpx/raw/client.py loc=L70 community=2]\nNODE AsyncClient [src=worked/httpx/raw/client.py loc=L123 community=2]","delay":0.4,"duration":0.68,"theme":"dark"},"cursor":{"from":[170,270],"to":[825,280]},"cameraBias":{"startDriftX":-72,"startDriftY":12,"centerY":-6,"maxScale":1.26,"fillX":0.82,"fillY":0.72,"pushIn":0.18},"durationSec":12.76425},{"id":"confidence","image":"screenshots/05-confidence.png","kicker":"我最看重","title":"关系有置信度，才方便复核","subtitle":"EXTRACTED 和 INFERRED 分开，减少幻觉污染。","caption":"这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。","narration":"我最看重的是置信度。EXTRACTED 是原文抽到的，INFERRED 是模型推断的。一个工具愿意把这两类分开，才适合给 AI assistant 用，因为你知道哪些地方需要复核。","focus":{"x":704,"y":246,"w":582,"h":294},"focusVisible":false,"cameraBox":{"x":706,"y":248,"w":568,"h":202},"selection":{"x":712,"y":307,"w":512,"h":66},"selectionLines":[{"x":712,"y":306,"w":492,"h":32,"delay":0.2,"duration":0.32},{"x":712,"y":338,"w":454,"h":32,"delay":0.38,"duration":0.34}],"selectionTheme":"light","cursor":{"from":[890,348],"to":[1210,348]},"cameraBias":{"startDriftX":-58,"startDriftY":18,"centerX":18,"centerY":-2,"maxScale":1.26,"fillX":0.82,"fillY":0.72,"pushIn":0.18},"durationSec":11.686917},{"id":"close","image":"screenshots/02-output-proof.png","kicker":"发布角度","title":"这篇就按“实测证据链”来写","subtitle":"先结果，再报告，再查询，最后讲接入方式。","caption":"一句话结论：给 Agent 地图，而不是无休止塞上下文。","narration":"所以这篇图文和视频，我会按实测证据链来写：先看结果，再看报告，再看查询，最后讲怎么接到 Agent 工作流。结论就一句话：给 Agent 地图，而不是无休止塞上下文。","focus":{"x":78,"y":617,"w":646,"h":108},"cursor":{"from":[540,580],"to":[310,590]},"cameraBias":{"startDriftX":24,"startDriftY":32,"centerX":-12,"centerY":18,"maxScale":1.14,"fillX":0.82,"fillY":0.72,"pushIn":0.12},"durationSec":12.369667}];
+		const totalDuration = 90.416751;
+		const stage = document.querySelector(".stage");
+		const frame = document.querySelector(".frame");
+		const mediaScene = document.querySelector(".media-scene");
+		const img = document.querySelector(".media-scene img");
+		const kicker = document.querySelector(".kicker");
+		const title = document.querySelector("h1");
+		const subtitle = document.querySelector(".subtitle");
+		const caption = document.querySelector(".caption");
+		const focus = document.querySelector(".focus");
+		const selection = document.querySelector(".selection");
+		const selectionDom = document.querySelector(".selection-dom");
+		const cursor = document.querySelector(".cursor");
+		const cursorTrail = document.querySelector(".cursor-trail");
+		const progress = document.querySelector(".progress span");
+		let current = -1;
+		let start = performance.now();
+		const offsets = [];
+		scenes.reduce((sum, scene, index) => {
+			offsets[index] = sum;
+			return sum + scene.durationSec;
+		}, 0);
+		function sceneIndexAt(time) {
+			for (let i = 0; i < scenes.length; i += 1) {
+				if (time >= offsets[i] && time < offsets[i] + scenes[i].durationSec) return i;
+			}
+			return scenes.length - 1;
+		}
+		function clamp(value, min, max) {
+			return Math.min(max, Math.max(min, value));
+		}
+		function fitFrame(scale, centerX, centerY) {
+			const renderScale = FIT_SCALE * scale;
+			const scaledW = SOURCE_W * renderScale;
+			const scaledH = SOURCE_H * renderScale;
+			return {
+				x: clamp(VIEW_W / 2 - centerX * renderScale, VIEW_W - scaledW, 0),
+				y: clamp(VIEW_H / 2 - centerY * renderScale, VIEW_H - scaledH, 0),
+				scale: renderScale,
+			};
+		}
+		function resolveCamera(scene) {
+			const subject = scene.cameraBox || scene.focus || scene.selection || { x: 160, y: 120, w: 980, h: 520 };
+			const bias = scene.cameraBias || {};
+			const fillX = bias.fillX || 0.8;
+			const fillY = bias.fillY || 0.78;
+			const centerX = subject.x + subject.w / 2 + (bias.centerX || 0);
+			const centerY = subject.y + subject.h / 2 + (bias.centerY || 0);
+			const scaleForWidth = VIEW_W * fillX / (subject.w * FIT_SCALE);
+			const scaleForHeight = VIEW_H * fillY / (subject.h * FIT_SCALE);
+			const targetScale = clamp(Math.min(scaleForWidth, scaleForHeight), 1, bias.maxScale || 1.18);
+			const startScale = clamp(Math.max(1, targetScale - (bias.pushIn || 0.12)), 1, targetScale);
+			const end = fitFrame(targetScale, centerX, centerY);
+			const start = fitFrame(
+				startScale,
+				centerX + (bias.startDriftX || 0),
+				centerY + (bias.startDriftY || 0),
+			);
+			return { start, end };
+		}
+		function applyCamera(camera, durationSec) {
+			mediaScene.style.setProperty("--scene-motion", Math.max(1.15, durationSec - 0.9).toFixed(2) + "s");
+			mediaScene.style.transform = "translate3d(" + camera.start.x.toFixed(2) + "px, " + camera.start.y.toFixed(2) + "px, 0) scale(" + camera.start.scale.toFixed(4) + ")";
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					mediaScene.style.transform = "translate3d(" + camera.end.x.toFixed(2) + "px, " + camera.end.y.toFixed(2) + "px, 0) scale(" + camera.end.scale.toFixed(4) + ")";
+				});
+			});
+		}
+		function setBox(el, box) {
+			if (!box) {
+				el.style.display = "none";
+				return;
+			}
+			el.style.display = "block";
+			el.style.setProperty("--x", Math.round(box.x) + "px");
+			el.style.setProperty("--y", Math.round(box.y) + "px");
+			el.style.setProperty("--w", Math.round(box.w) + "px");
+			el.style.setProperty("--h", Math.round(box.h) + "px");
+		}
+		function setFocusBox(scene) {
+			if (!scene.focus || scene.focusVisible === false) {
+				focus.style.display = "none";
+				return;
+			}
+			setBox(focus, scene.focus);
+		}
+		function buildSelectionLines(scene) {
+			if (!scene.selection || scene.selectionDom) {
+				selection.innerHTML = "";
+				selection.removeAttribute("data-theme");
+				selection.style.display = "none";
+				return;
+			}
+			setBox(selection, scene.selection);
+			selection.style.display = "block";
+			selection.dataset.theme = scene.selectionTheme || "";
+			const lines = scene.selectionLines?.length
+				? scene.selectionLines
+				: [{ x: scene.selection.x, y: scene.selection.y, w: scene.selection.w, h: scene.selection.h, delay: 0.22, duration: 0.4 }];
+			selection.innerHTML = lines.map((line) => {
+				const relX = line.x - scene.selection.x;
+				const relY = line.y - scene.selection.y;
+				return '<div class="selection-line" style="--lx:' + Math.round(relX) + 'px;--ly:' + Math.round(relY) + 'px;--lw:' + Math.round(line.w) + 'px;--lh:' + Math.round(line.h) + 'px;--delay:' + (line.delay || 0) + 's;--duration:' + (line.duration || 0.36) + 's;"></div>';
+			}).join("");
+		}
+		function clearSelectionDom() {
+			selectionDom.innerHTML = "";
+			selectionDom.style.display = "none";
+			selectionDom.removeAttribute("data-theme");
+			selectionDom.style.removeProperty("--dom-font-size");
+			selectionDom.style.removeProperty("--dom-line-height");
+			const selectionApi = window.getSelection ? window.getSelection() : null;
+			selectionApi?.removeAllRanges();
+		}
+		function buildSelectionDom(scene) {
+			if (!scene.selectionDom) {
+				clearSelectionDom();
+				return;
+			}
+			const box = scene.selectionDom;
+			setBox(selectionDom, box);
+			selectionDom.style.display = "block";
+			selectionDom.dataset.theme = box.theme || "";
+			selectionDom.style.setProperty("--dom-font-size", (box.fontSize || 16) + "px");
+			selectionDom.style.setProperty("--dom-line-height", String(box.lineHeight || 1.46));
+			selectionDom.innerHTML = '<div class="selection-dom-text">' + box.text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</div>";
+			const textEl = selectionDom.querySelector(".selection-dom-text");
+			textEl.style.opacity = "0";
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					const selectionApi = window.getSelection ? window.getSelection() : null;
+					if (!selectionApi) return;
+					selectionApi.removeAllRanges();
+					const walker = document.createTreeWalker(textEl, NodeFilter.SHOW_TEXT);
+					const firstText = walker.nextNode();
+					if (!firstText) return;
+					let lastText = firstText;
+					while (walker.nextNode()) lastText = walker.currentNode;
+					const range = document.createRange();
+					range.setStart(firstText, 0);
+					range.setEnd(lastText, lastText.textContent.length);
+					textEl.style.opacity = "1";
+					setTimeout(() => {
+						selectionApi.removeAllRanges();
+						selectionApi.addRange(range);
+					}, Math.round((box.delay || 0.38) * 1000));
+				});
+			});
+		}
+		function projectPoint(cameraState, point) {
+			const x = frame.offsetLeft + cameraState.x + point[0] * cameraState.scale;
+			const y = frame.offsetTop + cameraState.y + point[1] * cameraState.scale;
+			return {
+				x: clamp(x, 36, 1242),
+				y: clamp(y, 62, 684),
+			};
+		}
+		function deriveCursorPath(scene, camera) {
+			if (scene.selection) {
+				const inset = Math.min(22, Math.max(12, scene.selection.w * 0.05));
+				return {
+					from: projectPoint(camera.start, [scene.selection.x + inset, scene.selection.y + scene.selection.h / 2]),
+					to: projectPoint(camera.end, [scene.selection.x + scene.selection.w - inset, scene.selection.y + scene.selection.h / 2]),
+				};
+			}
+			if (scene.focus) {
+				return {
+					from: projectPoint(camera.start, [scene.focus.x + scene.focus.w * 0.74, scene.focus.y + Math.min(34, scene.focus.h * 0.16)]),
+					to: projectPoint(camera.end, [scene.focus.x + scene.focus.w * 0.4, scene.focus.y + scene.focus.h * 0.56]),
+				};
+			}
+			const from = scene.cursor?.from || [650, 320];
+			const to = scene.cursor?.to || from;
+			return { from: { x: from[0], y: from[1] }, to: { x: to[0], y: to[1] } };
+		}
+		function render(index) {
+			const scene = scenes[index];
+			const camera = resolveCamera(scene);
+			const cursorPath = deriveCursorPath(scene, camera);
+			stage.classList.remove("scene-on");
+			void stage.offsetWidth;
+			img.src = scene.image;
+			applyCamera(camera, scene.durationSec || 7.5);
+			kicker.textContent = scene.kicker;
+			title.textContent = scene.title;
+			subtitle.textContent = scene.subtitle;
+			caption.textContent = scene.caption;
+			setFocusBox(scene);
+			buildSelectionLines(scene);
+			buildSelectionDom(scene);
+			cursor.style.setProperty("--cx", cursorPath.from.x.toFixed(1) + "px");
+			cursor.style.setProperty("--cy", cursorPath.from.y.toFixed(1) + "px");
+			cursorTrail.style.setProperty("--trail-x", cursorPath.from.x.toFixed(1) + "px");
+			cursorTrail.style.setProperty("--trail-y", cursorPath.from.y.toFixed(1) + "px");
+			stage.classList.add("scene-on");
+			setTimeout(() => {
+				cursor.style.setProperty("--cx", cursorPath.to.x.toFixed(1) + "px");
+				cursor.style.setProperty("--cy", cursorPath.to.y.toFixed(1) + "px");
+				cursorTrail.style.setProperty("--trail-x", (cursorPath.to.x - 10).toFixed(1) + "px");
+				cursorTrail.style.setProperty("--trail-y", (cursorPath.to.y - 8).toFixed(1) + "px");
+			}, 420);
+		}
+		function tick() {
+			const elapsed = (performance.now() - start) / 1000;
+			const idx = sceneIndexAt(elapsed);
+			if (idx !== current) {
+				current = idx;
+				render(idx);
+			}
+			progress.style.width = Math.min(100, elapsed / totalDuration * 100) + "%";
+			if (elapsed >= totalDuration + .35) {
+				window.__REAL_DEMO_DONE__ = true;
+				return;
+			}
+			requestAnimationFrame(tick);
+		}
+		Promise.resolve(document.fonts ? document.fonts.ready : null).then(() => {
+			render(0);
+			requestAnimationFrame(tick);
+			setTimeout(() => { window.__REAL_DEMO_DONE__ = true; }, Math.ceil((totalDuration + 2) * 1000));
+		});
+	</script>
+</body>
+</html>

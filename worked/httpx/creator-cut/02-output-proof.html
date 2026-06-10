@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+	<style>
+		:root { --canvas:#f5efe6;
+		--paper:#fcf8f1;
+		--ink:#101720;
+		--muted:#5f6b76;
+		--line:#d7ccb9;
+		--accent:#1f5ed7;
+		--signal:#0d6d66;
+		--clay:#b45437;
+		--sun:#b88426;
+		--night:#0d1726;
+		--display:"IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+		--body:"IBM Plex Sans", "Segoe UI", sans-serif;
+		--mono:"IBM Plex Mono", Consolas, monospace;
+		--r-sm:8px;
+		--r-md:14px;
+		--r-lg:20px;
+		--space-xs:8px;
+		--space-sm:14px;
+		--space-md:22px;
+		--space-lg:34px;
+		--space-xl:48px; }
+		body { margin:0; width:1365px; height:768px; overflow:hidden; background:
+			linear-gradient(180deg, rgba(245,239,230,.98), rgba(245,239,230,.98)),
+			repeating-linear-gradient(90deg, rgba(16,23,32,.03) 0 1px, transparent 1px 120px);
+			font-family:var(--body); color:var(--ink); }
+		body::before { content:""; position:absolute; inset:24px; border:1px solid rgba(16,23,32,.08); pointer-events:none; }
+		.wrap { position:relative; padding:44px 54px 36px; }
+		.topline { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+		.eyebrow { display:inline-flex; align-items:center; gap:10px; color:var(--signal); font-weight:700; font-size:15px; letter-spacing:.08em; text-transform:uppercase; }
+		.eyebrow::before { content:""; width:18px; height:2px; background:var(--signal); }
+		.edition { font-family:var(--mono); font-size:13px; color:var(--muted); }
+		h1 { margin:0 0 24px; font-family:var(--display); font-size:64px; line-height:.95; letter-spacing:0; max-width:980px; text-transform:uppercase; }
+		.deck { margin:0 0 26px; max-width:760px; font-size:20px; color:var(--muted); line-height:1.45; }
+		.grid { display:grid; grid-template-columns:1.12fr .88fr; gap:20px; }
+		.card { position:relative; border:1px solid var(--line); border-radius:var(--r-md); background:rgba(252,248,241,.92); box-shadow:0 16px 44px rgba(16,23,32,.08); padding:24px; min-height:410px; overflow:hidden; }
+		.card::before { content:""; position:absolute; top:0; left:0; width:100%; height:6px; background:linear-gradient(90deg,var(--accent),var(--signal),var(--sun)); opacity:.95; }
+		.files { display:grid; gap:12px; margin-top:8px; }
+		.file { display:grid; grid-template-columns:42px 1fr auto; gap:12px; align-items:center; border:1px solid rgba(16,23,32,.08); border-radius:var(--r-sm); padding:14px 16px; background:linear-gradient(180deg, rgba(255,255,255,.8), rgba(252,248,241,.96)); font-size:19px; font-weight:700; }
+		.file span:first-child { font-family:var(--mono); color:var(--accent); font-size:14px; }
+		.file small { color:var(--muted); font-weight:600; }
+		.metric-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:20px; }
+		.metric { background:var(--night); color:var(--paper); border-radius:var(--r-sm); padding:18px; }
+		.metric strong { display:block; font-family:var(--display); font-size:54px; line-height:.9; }
+		.metric span { display:block; margin-top:8px; color:#c7d0db; font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:12px; }
+		pre { margin:0; height:362px; overflow:hidden; white-space:pre-wrap; color:#d8dde4; background:#111a29; border-radius:var(--r-sm); padding:18px 20px; font-size:17px; line-height:1.5; box-shadow:inset 0 0 0 1px rgba(255,255,255,.05); }
+		code { font-family:var(--mono); }
+		.path { color:#8bb7ff; }
+		.note { position:absolute; right:20px; bottom:18px; padding:10px 12px; border:1px solid rgba(180,84,55,.22); background:rgba(180,84,55,.08); color:#6f3321; border-radius:var(--r-sm); font-size:14px; }
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="topline">
+			<div class="eyebrow">field report</div>
+			<div class="edition">spec / proof / route</div>
+		</div>
+		<h1>这版不是复述 README<br/>我直接看生成物</h1>
+		<p class="deck">先看真正落地的产物，再判断 graphify 值不值得讲。这里的重点不是“它会画图”，而是这四个产物能不能组成一条可信的证据链。</p>
+		<div class="grid">
+			<section class="card">
+				<div class="files">
+					<div class="file"><span>01</span><b>graph.html</b><small>interactive map</small></div>
+					<div class="file"><span>02</span><b>GRAPH_REPORT.md</b><small>agent route map</small></div>
+					<div class="file"><span>03</span><b>graph.json</b><small>query / MCP substrate</small></div>
+					<div class="file"><span>04</span><b>graphify query</b><small>question → subgraph</small></div>
+				</div>
+				<div class="metric-row">
+					<div class="metric"><strong>144</strong><span>nodes</span></div>
+					<div class="metric"><strong>330</strong><span>edges</span></div>
+					<div class="metric"><strong>6</strong><span>communities</span></div>
+				</div>
+			</section>
+			<section class="card">
+				<pre><code><span class="path">worked/httpx</span>
+├── raw/
+│   ├── auth.py
+│   ├── client.py
+│   ├── models.py
+│   └── transport.py
+├── graph.html
+├── GRAPH_REPORT.md
+└── graph.json
+
+question:
+why does Client connect transport,
+auth, URL and errors?</code></pre>
+				<div class="note">证据不是一句总结，而是一套可回查的文件。</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>
