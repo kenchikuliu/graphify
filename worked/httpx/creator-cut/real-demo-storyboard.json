@@ -35,7 +35,7 @@
         "fillY": 0.8,
         "pushIn": 0.16
       },
-      "durationSec": 9.720917
+      "durationSec": 9.288625
     },
     {
       "id": "outputs",
@@ -70,13 +70,14 @@
         "fillY": 0.84,
         "pushIn": 0.14
       },
-      "durationSec": 16.425125
+      "durationSec": 15.701208
     },
     {
       "id": "report",
       "image": "screenshots/03-report-proof.png",
       "kicker": "报告",
       "title": "GRAPH_REPORT.md 像一张读项目路线图",
+      "panelTitle": "GRAPH_REPORT.MD\n像一张读项目路线图",
       "subtitle": "先告诉你 god nodes，再告诉你哪些连接值得怀疑。",
       "caption": "Client、AsyncClient、Response、Request 这些节点被排在最前面，Agent 不必从文件树盲扫。",
       "narration": "GRAPH_REPORT 点 md 最适合给 Agent 先读。它先把 god nodes 排出来，Client、AsyncClient、Response、Request 都在前面。也就是说，Agent 不必从文件树盲扫，而是先知道架构主线在哪里。",
@@ -85,6 +86,12 @@
         "y": 198,
         "w": 688,
         "h": 472
+      },
+      "cameraBox": {
+        "x": 34,
+        "y": 192,
+        "w": 1268,
+        "h": 500
       },
       "cursor": {
         "from": [
@@ -96,17 +103,18 @@
           335
         ]
       },
+      "panelTitleSize": 38,
       "cameraBias": {
-        "startDriftX": 38,
-        "startDriftY": 14,
-        "centerX": 14,
-        "centerY": -12,
-        "maxScale": 1.2,
-        "fillX": 0.84,
-        "fillY": 0.82,
-        "pushIn": 0.14
+        "startDriftX": 12,
+        "startDriftY": 6,
+        "centerX": -14,
+        "centerY": -8,
+        "maxScale": 1.02,
+        "fillX": 0.98,
+        "fillY": 0.9,
+        "pushIn": 0.02
       },
-      "durationSec": 14.170957999999999
+      "durationSec": 13.529333
     },
     {
       "id": "graph",
@@ -148,7 +156,7 @@
         "fillY": 0.8,
         "pushIn": 0.18
       },
-      "durationSec": 13.278917
+      "durationSec": 12.702458
     },
     {
       "id": "query",
@@ -227,13 +235,14 @@
         "fillY": 0.72,
         "pushIn": 0.18
       },
-      "durationSec": 12.76425
+      "durationSec": 12.205957999999999
     },
     {
       "id": "confidence",
       "image": "screenshots/05-confidence.png",
       "kicker": "我最看重",
       "title": "关系有置信度，才方便复核",
+      "panelTitle": "关系有置信度\n才方便复核",
       "subtitle": "EXTRACTED 和 INFERRED 分开，减少幻觉污染。",
       "caption": "这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。",
       "narration": "我最看重的是置信度。EXTRACTED 是原文抽到的，INFERRED 是模型推断的。一个工具愿意把这两类分开，才适合给 AI assistant 用，因为你知道哪些地方需要复核。",
@@ -245,10 +254,10 @@
       },
       "focusVisible": false,
       "cameraBox": {
-        "x": 706,
-        "y": 248,
-        "w": 568,
-        "h": 202
+        "x": 40,
+        "y": 236,
+        "w": 1260,
+        "h": 454
       },
       "selection": {
         "x": 712,
@@ -285,17 +294,18 @@
           348
         ]
       },
+      "panelTitleSize": 38,
       "cameraBias": {
-        "startDriftX": -58,
-        "startDriftY": 18,
-        "centerX": 18,
-        "centerY": -2,
-        "maxScale": 1.26,
-        "fillX": 0.82,
-        "fillY": 0.72,
-        "pushIn": 0.18
+        "startDriftX": -10,
+        "startDriftY": 8,
+        "centerX": -6,
+        "centerY": 10,
+        "maxScale": 1.04,
+        "fillX": 0.97,
+        "fillY": 0.9,
+        "pushIn": 0.04
       },
-      "durationSec": 11.686917
+      "durationSec": 11.168833
     },
     {
       "id": "close",
@@ -331,7 +341,7 @@
         "fillY": 0.72,
         "pushIn": 0.12
       },
-      "durationSec": 12.369667
+      "durationSec": 11.831
     }
   ]
 }

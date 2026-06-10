@@ -656,12 +656,15 @@ const scenes = [
 		image: "screenshots/03-report-proof.png",
 		kicker: "报告",
 		title: "GRAPH_REPORT.md 像一张读项目路线图",
+		panelTitle: "GRAPH_REPORT.MD\n像一张读项目路线图",
 		subtitle: "先告诉你 god nodes，再告诉你哪些连接值得怀疑。",
 		caption: "Client、AsyncClient、Response、Request 这些节点被排在最前面，Agent 不必从文件树盲扫。",
 		narration: "GRAPH_REPORT 点 md 最适合给 Agent 先读。它先把 god nodes 排出来，Client、AsyncClient、Response、Request 都在前面。也就是说，Agent 不必从文件树盲扫，而是先知道架构主线在哪里。",
 		focus: { x: 620, y: 198, w: 688, h: 472 },
+		cameraBox: { x: 34, y: 192, w: 1268, h: 500 },
 		cursor: { from: [1030, 185], to: [890, 335] },
-		cameraBias: { startDriftX: 38, startDriftY: 14, centerX: 14, centerY: -12, maxScale: 1.2, fillX: 0.84, fillY: 0.82, pushIn: 0.14 },
+		panelTitleSize: 38,
+		cameraBias: { startDriftX: 12, startDriftY: 6, centerX: -14, centerY: -8, maxScale: 1.02, fillX: 0.98, fillY: 0.9, pushIn: 0.02 },
 	},
 	{
 		id: "graph",
@@ -713,12 +716,13 @@ const scenes = [
 		image: "screenshots/05-confidence.png",
 		kicker: "我最看重",
 		title: "关系有置信度，才方便复核",
+		panelTitle: "关系有置信度\n才方便复核",
 		subtitle: "EXTRACTED 和 INFERRED 分开，减少幻觉污染。",
 		caption: "这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。",
 		narration: "我最看重的是置信度。EXTRACTED 是原文抽到的，INFERRED 是模型推断的。一个工具愿意把这两类分开，才适合给 AI assistant 用，因为你知道哪些地方需要复核。",
 		focus: { x: 704, y: 246, w: 582, h: 294 },
 		focusVisible: false,
-		cameraBox: { x: 706, y: 248, w: 568, h: 202 },
+		cameraBox: { x: 40, y: 236, w: 1260, h: 454 },
 		selection: { x: 712, y: 307, w: 512, h: 66 },
 		selectionLines: [
 			{ x: 712, y: 306, w: 492, h: 32, delay: 0.2, duration: 0.32 },
@@ -726,7 +730,8 @@ const scenes = [
 		],
 		selectionTheme: "light",
 		cursor: { from: [890, 348], to: [1210, 348] },
-		cameraBias: { startDriftX: -58, startDriftY: 18, centerX: 18, centerY: -2, maxScale: 1.26, fillX: 0.82, fillY: 0.72, pushIn: 0.18 },
+		panelTitleSize: 38,
+		cameraBias: { startDriftX: -10, startDriftY: 8, centerX: -6, centerY: 10, maxScale: 1.04, fillX: 0.97, fillY: 0.9, pushIn: 0.04 },
 	},
 	{
 		id: "close",
@@ -1198,7 +1203,7 @@ function stageHtml() {
 		.stage.scene-on .panel.fade { opacity:1; transform:translateX(0) translateY(0); }
 		.kicker { display:inline-flex; align-items:center; gap:10px; margin-bottom:16px; color:var(--signal); font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
 		.kicker::before { content:""; width:20px; height:2px; background:var(--signal); }
-		h1 { margin:0; font-family:var(--display); font-size:44px; line-height:.96; letter-spacing:0; text-transform:uppercase; }
+		h1 { margin:0; font-family:var(--display); font-size:var(--panel-title-size,44px); line-height:var(--panel-title-line-height,.96); letter-spacing:0; text-transform:uppercase; white-space:pre-line; }
 		.subtitle { margin:16px 0 0; color:#1d2732; font-size:20px; line-height:1.34; font-weight:600; max-width:295px; }
 		.caption { margin:22px 0 0; color:var(--muted); font-size:15px; line-height:1.62; max-width:292px; }
 		.focus, .selection, .selection-dom { position:absolute; left:var(--x); top:var(--y); width:var(--w); height:var(--h); z-index:6; pointer-events:none; opacity:0; transform:scale(.965); }
@@ -1363,6 +1368,24 @@ function stageHtml() {
 				scale: renderScale,
 			};
 		}
+		function fitPanelTitle(scene) {
+			const preferred = scene.panelTitleSize || (scene.title.length > 18 ? 40 : 44);
+			const minSize = scene.panelTitleMinSize || 32;
+			let size = preferred;
+			let lineHeight = scene.panelTitleLineHeight || (size <= 38 ? 0.94 : 0.96);
+			title.style.setProperty("--panel-title-size", size + "px");
+			title.style.setProperty("--panel-title-line-height", String(lineHeight));
+			const maxHeight = scene.panelTitleMaxHeight || 134;
+			for (let i = 0; i < 14; i += 1) {
+				const tooTall = title.scrollHeight > maxHeight;
+				const tooWide = title.scrollWidth > title.clientWidth + 2;
+				if ((!tooTall && !tooWide) || size <= minSize) break;
+				size -= 1;
+				lineHeight = scene.panelTitleLineHeight || (size <= 38 ? 0.94 : 0.96);
+				title.style.setProperty("--panel-title-size", size + "px");
+				title.style.setProperty("--panel-title-line-height", String(lineHeight));
+			}
+		}
 		function resolveCamera(scene) {
 			const subject = scene.cameraBox || scene.focus || scene.selection || { x: 160, y: 120, w: 980, h: 520 };
 			const bias = scene.cameraBias || {};
@@ -1507,7 +1530,8 @@ function stageHtml() {
 			img.src = scene.image;
 			applyCamera(camera, scene.durationSec || 7.5);
 			kicker.textContent = scene.kicker;
-			title.textContent = scene.title;
+			title.textContent = scene.panelTitle || scene.title;
+			fitPanelTitle(scene);
 			subtitle.textContent = scene.subtitle;
 			caption.textContent = scene.caption;
 			setFocusBox(scene);
