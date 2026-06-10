@@ -5,7 +5,7 @@
 - 视频：`recordings/graphify-real-demo-cut.mp4`
 - 长文：`graphify-real-demo-blog.md`
 - 配音：`elevenlabs`
-- 总时长：`01:24`（约 84.5 秒）
+- 总时长：`01:23`（约 83.7 秒）
 - 镜头数：`7`
 - 原生浏览器 proof：`recordings/graphify-live-selection-proof.mp4`（约 43.8 秒）
 - 原生 proof 页面：`graphify-live-selection-proof.html`
@@ -18,7 +18,7 @@
 
 ![AI 读大项目缺的不是更长上下文 - 原始证据截图](screenshots/01-graph-html.png)
 
-- 时间：00:00 - 00:09
+- 时间：00:00 - 00:08
 - Kicker：实测判断
 - Subtitle：它先需要一张能追问的地图。
 - Caption：我这版直接看 graphify 的真实输出：graph.html、GRAPH_REPORT.md、graph.json 和 query 结果。
@@ -31,7 +31,7 @@
 
 ![我只认这四个产物 - 原始证据截图](screenshots/02-output-proof.png)
 
-- 时间：00:09 - 00:24
+- 时间：00:08 - 00:24
 - Kicker：证据链
 - Subtitle：图给人看，报告给 Agent 定向，JSON 给查询。
 - Caption：这次用 worked/httpx 示例：144 nodes、330 edges、6 communities，报告和 JSON 统计一致。
@@ -57,7 +57,7 @@
 
 ![graph.html 不是装饰图 - 原始证据截图](screenshots/01-graph-html.png)
 
-- 时间：00:37 - 00:50
+- 时间：00:37 - 00:49
 - Kicker：可视化
 - Subtitle：右侧社区列表让你直接看模块边界。
 - Caption：中心的大节点和右侧社区一起看，能快速发现 Client 如何跨 transport、auth、models 和 errors。
@@ -70,7 +70,7 @@
 
 ![query 返回的是子图，不是一句漂亮摘要 - 原始证据截图](screenshots/04-query-client.png)
 
-- 时间：00:50 - 01:01
+- 时间：00:49 - 01:01
 - Kicker：查询
 - Subtitle：NODE 和 EDGE 都带来源、位置和关系。
 - Caption：这就适合接到真实工作流：先拿局部结构，再回到源码复核。
@@ -96,7 +96,7 @@
 
 ![这篇就按“实测证据链”来写 - 原始证据截图](screenshots/02-output-proof.png)
 
-- 时间：01:12 - 01:24
+- 时间：01:12 - 01:23
 - Kicker：发布角度
 - Subtitle：先结果，再报告，再查询，最后讲接入方式。
 - Caption：一句话结论：给 Agent 地图，而不是无休止塞上下文。

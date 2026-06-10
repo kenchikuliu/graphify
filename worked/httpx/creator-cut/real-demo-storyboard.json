@@ -75,6 +75,7 @@
     {
       "id": "report",
       "image": "screenshots/03-report-proof.png",
+      "layout": "flip",
       "kicker": "报告",
       "title": "GRAPH_REPORT.md 像一张读项目路线图",
       "panelTitle": "GRAPH_REPORT.MD\n像一张读项目路线图",
@@ -161,6 +162,7 @@
     {
       "id": "query",
       "image": "screenshots/04-query-client.png",
+      "layout": "flip",
       "kicker": "查询",
       "title": "query 返回的是子图，不是一句漂亮摘要",
       "subtitle": "NODE 和 EDGE 都带来源、位置和关系。",
@@ -310,6 +312,7 @@
     {
       "id": "close",
       "image": "screenshots/02-output-proof.png",
+      "layout": "flip",
       "kicker": "发布角度",
       "title": "这篇就按“实测证据链”来写",
       "subtitle": "先结果，再报告，再查询，最后讲接入方式。",

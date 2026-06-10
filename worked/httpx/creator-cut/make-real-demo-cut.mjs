@@ -654,6 +654,7 @@ const scenes = [
 	{
 		id: "report",
 		image: "screenshots/03-report-proof.png",
+		layout: "flip",
 		kicker: "报告",
 		title: "GRAPH_REPORT.md 像一张读项目路线图",
 		panelTitle: "GRAPH_REPORT.MD\n像一张读项目路线图",
@@ -682,6 +683,7 @@ const scenes = [
 	{
 		id: "query",
 		image: "screenshots/04-query-client.png",
+		layout: "flip",
 		kicker: "查询",
 		title: "query 返回的是子图，不是一句漂亮摘要",
 		subtitle: "NODE 和 EDGE 都带来源、位置和关系。",
@@ -736,6 +738,7 @@ const scenes = [
 	{
 		id: "close",
 		image: "screenshots/02-output-proof.png",
+		layout: "flip",
 		kicker: "发布角度",
 		title: "这篇就按“实测证据链”来写",
 		subtitle: "先结果，再报告，再查询，最后讲接入方式。",
@@ -1194,7 +1197,7 @@ function stageHtml() {
 		.viewport { position:absolute; inset:0; overflow:hidden; background:#0f1723; }
 		.media-scene { position:absolute; left:0; top:0; width:1365px; height:768px; transform-origin:top left; will-change:transform; transition:transform var(--scene-motion,7s) cubic-bezier(.16,.82,.22,1); }
 		.media-scene img { position:absolute; inset:0; width:1365px; height:768px; object-fit:cover; object-position:left top; filter:saturate(1.04) contrast(1.02); }
-		.frame.fade { opacity:0; transform:translateY(18px) scale(.984) rotate(-.35deg); transition:opacity .36s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+		.frame.fade { opacity:0; transform:translate3d(-14px, 18px, 0) scale(.984) rotate(-.35deg); transition:opacity .36s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
 		.stage.scene-on .frame.fade { opacity:1; transform:translateY(0) scale(1) rotate(0deg); }
 		.panel { position:absolute; right:34px; top:76px; width:382px; min-height:418px; border:1px solid rgba(16,23,32,.10); border-radius:var(--r-md); background:rgba(252,248,241,.92); box-shadow:0 20px 56px rgba(15,23,42,.12); padding:24px 24px 22px; z-index:9; overflow:hidden; }
 		.panel::before { content:""; position:absolute; top:0; left:0; width:100%; height:6px; background:linear-gradient(90deg,var(--accent),var(--signal),var(--sun)); }
@@ -1278,6 +1281,11 @@ function stageHtml() {
 		.cursor::after { content:""; position:absolute; left:4px; top:5px; width:0; height:0; border-left:14px solid white; border-bottom:19px solid transparent; }
 		.cursor-trail { position:absolute; z-index:29; width:18px; height:18px; border-radius:999px; background:radial-gradient(circle, rgba(31,94,215,.18), transparent 68%); left:var(--trail-x,690px); top:var(--trail-y,300px); transform:translate(-50%,-50%); transition:left 1.02s cubic-bezier(.18,.84,.22,1), top 1.02s cubic-bezier(.18,.84,.22,1), opacity .3s ease; opacity:.85; }
 		.rule { position:absolute; left:868px; top:110px; width:1px; height:502px; background:linear-gradient(180deg, transparent, rgba(16,23,32,.14), transparent); z-index:9; }
+		.stage.layout-flip .frame { left:437px; }
+		.stage.layout-flip .frame.fade { transform:translate3d(14px, 18px, 0) scale(.984) rotate(.35deg); }
+		.stage.layout-flip .panel { left:34px; right:auto; }
+		.stage.layout-flip .panel.fade { transform:translateX(-26px) translateY(12px); }
+		.stage.layout-flip .rule { left:412px; }
 		.flash { position:absolute; inset:0; background:linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.24) 18%, rgba(255,255,255,.06) 28%, transparent 40%); transform:translateX(-120%); opacity:0; pointer-events:none; z-index:18; }
 		.stage.scene-on .flash { animation:sceneFlash .62s ease; }
 		.progress { position:absolute; left:38px; right:38px; bottom:18px; height:5px; border-radius:999px; background:rgba(16,23,32,.10); overflow:hidden; z-index:20; }
@@ -1523,6 +1531,7 @@ function stageHtml() {
 		}
 		function render(index) {
 			const scene = scenes[index];
+			stage.classList.toggle("layout-flip", scene.layout === "flip");
 			const camera = resolveCamera(scene);
 			const cursorPath = deriveCursorPath(scene, camera);
 			stage.classList.remove("scene-on");
