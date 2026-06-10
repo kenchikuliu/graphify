@@ -4,6 +4,12 @@
     {
       "id": "hook",
       "image": "screenshots/01-graph-html.png",
+      "panelLabel": "THESIS",
+      "panelWatermark": "THESIS",
+      "panelTone": "cobalt",
+      "frameTag": "interactive graph",
+      "focusLabel": "graph canvas",
+      "transitionVariant": "wash",
       "kicker": "实测判断",
       "title": "AI 读大项目缺的不是更长上下文",
       "subtitle": "它先需要一张能追问的地图。",
@@ -25,6 +31,9 @@
           360
         ]
       },
+      "cursorPulse": "end",
+      "cursorMoveDelayMs": 520,
+      "cursorMoveDurationMs": 840,
       "cameraBias": {
         "startDriftX": 58,
         "startDriftY": 28,
@@ -40,6 +49,12 @@
     {
       "id": "outputs",
       "image": "screenshots/02-output-proof.png",
+      "panelLabel": "EVIDENCE",
+      "panelWatermark": "EVIDENCE",
+      "panelTone": "signal",
+      "frameTag": "4 deliverables",
+      "focusLabel": "proof outputs",
+      "transitionVariant": "band",
       "kicker": "证据链",
       "title": "我只认这四个产物",
       "subtitle": "图给人看，报告给 Agent 定向，JSON 给查询。",
@@ -61,6 +76,9 @@
           455
         ]
       },
+      "cursorPulse": "end",
+      "cursorMoveDelayMs": 520,
+      "cursorMoveDurationMs": 980,
       "cameraBias": {
         "startDriftX": -42,
         "startDriftY": 26,
@@ -76,6 +94,12 @@
       "id": "report",
       "image": "screenshots/03-report-proof.png",
       "layout": "flip",
+      "panelLabel": "AGENT ROUTE",
+      "panelWatermark": "ROUTE",
+      "panelTone": "sun",
+      "frameTag": "god nodes first",
+      "focusLabel": "god nodes",
+      "transitionVariant": "sweep",
       "kicker": "报告",
       "title": "GRAPH_REPORT.md 像一张读项目路线图",
       "panelTitle": "GRAPH_REPORT.MD\n像一张读项目路线图",
@@ -104,6 +128,9 @@
           335
         ]
       },
+      "cursorPulse": "end",
+      "cursorMoveDelayMs": 560,
+      "cursorMoveDurationMs": 820,
       "panelTitleSize": 38,
       "cameraBias": {
         "startDriftX": 12,
@@ -120,6 +147,12 @@
     {
       "id": "graph",
       "image": "screenshots/01-graph-html.png",
+      "panelLabel": "MAP READ",
+      "panelWatermark": "MAP",
+      "panelTone": "cobalt",
+      "frameTag": "community lens",
+      "focusLabel": "community list",
+      "transitionVariant": "sweep",
       "kicker": "可视化",
       "title": "graph.html 不是装饰图",
       "subtitle": "右侧社区列表让你直接看模块边界。",
@@ -147,6 +180,9 @@
           422
         ]
       },
+      "cursorPulse": "end",
+      "cursorMoveDelayMs": 520,
+      "cursorMoveDurationMs": 780,
       "cameraBias": {
         "startDriftX": 62,
         "startDriftY": -28,
@@ -163,6 +199,11 @@
       "id": "query",
       "image": "screenshots/04-query-client.png",
       "layout": "flip",
+      "panelLabel": "SUBGRAPH PROOF",
+      "panelWatermark": "QUERY",
+      "panelTone": "night",
+      "frameTag": "traceable subgraph",
+      "transitionVariant": "band",
       "kicker": "查询",
       "title": "query 返回的是子图，不是一句漂亮摘要",
       "subtitle": "NODE 和 EDGE 都带来源、位置和关系。",
@@ -228,6 +269,9 @@
           280
         ]
       },
+      "cursorPulse": "start",
+      "cursorMoveDelayMs": 680,
+      "cursorMoveDurationMs": 1150,
       "cameraBias": {
         "startDriftX": -72,
         "startDriftY": 12,
@@ -242,6 +286,11 @@
     {
       "id": "confidence",
       "image": "screenshots/05-confidence.png",
+      "panelLabel": "TRUST SPLIT",
+      "panelWatermark": "TRUST",
+      "panelTone": "clay",
+      "frameTag": "extracted vs inferred",
+      "transitionVariant": "wash",
       "kicker": "我最看重",
       "title": "关系有置信度，才方便复核",
       "panelTitle": "关系有置信度\n才方便复核",
@@ -296,6 +345,9 @@
           348
         ]
       },
+      "cursorPulse": "start",
+      "cursorMoveDelayMs": 620,
+      "cursorMoveDurationMs": 980,
       "panelTitleSize": 38,
       "cameraBias": {
         "startDriftX": -10,
@@ -313,6 +365,12 @@
       "id": "close",
       "image": "screenshots/02-output-proof.png",
       "layout": "flip",
+      "panelLabel": "RELEASE CUT",
+      "panelWatermark": "RELEASE",
+      "panelTone": "night",
+      "frameTag": "publish stack",
+      "focusLabel": "publish bundle",
+      "transitionVariant": "curtain",
       "kicker": "发布角度",
       "title": "这篇就按“实测证据链”来写",
       "subtitle": "先结果，再报告，再查询，最后讲接入方式。",
@@ -334,6 +392,9 @@
           590
         ]
       },
+      "cursorPulse": "end",
+      "cursorMoveDelayMs": 620,
+      "cursorMoveDurationMs": 880,
       "cameraBias": {
         "startDriftX": 24,
         "startDriftY": 32,
