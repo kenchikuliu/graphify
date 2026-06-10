@@ -212,6 +212,15 @@ function runAsync(command, args, options = {}) {
 	});
 }
 
+async function pathExists(file) {
+	try {
+		await fs.access(file);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
 function ffprobeDuration(file) {
 	const stdout = run("ffprobe", [
 		"-v",
@@ -223,6 +232,36 @@ function ffprobeDuration(file) {
 		file,
 	]);
 	return Number.parseFloat(stdout.trim()) || 0;
+}
+
+async function loadNativeProofMeta() {
+	const videoFile = path.join(recordingsDir, "graphify-live-selection-proof.mp4");
+	const eventsFile = path.join(outDir, "live-selection-events.json");
+	if (!(await pathExists(videoFile)) || !(await pathExists(eventsFile))) return null;
+	let parsed = {};
+	try {
+		parsed = JSON.parse(await fs.readFile(eventsFile, "utf8"));
+	} catch {
+		parsed = {};
+	}
+	const cover = (await pathExists(path.join(screenshotsDir, "live-selection-cover.png")))
+		? "screenshots/live-selection-cover.png"
+		: "screenshots/01-graph-html.png";
+	const confidenceStill = (await pathExists(path.join(screenshotsDir, "live-selection-confidence.png")))
+		? "screenshots/live-selection-confidence.png"
+		: "";
+	const events = Array.isArray(parsed.events) ? parsed.events : [];
+	return {
+		video: "recordings/graphify-live-selection-proof.mp4",
+		html: "graphify-live-selection-proof.html",
+		markdown: "graphify-live-selection-proof.md",
+		eventsJson: "live-selection-events.json",
+		cover,
+		confidenceStill,
+		durationSec: Number.isFinite(parsed.durationSec) ? parsed.durationSec : ffprobeDuration(videoFile),
+		liveSteps: events.length,
+		totalProofSteps: events.length + (confidenceStill ? 1 : 0),
+	};
 }
 
 async function loadPlaywright() {
@@ -736,7 +775,7 @@ function sceneTimeline(totalDurationOverride = null) {
 	});
 }
 
-function sceneBreakdownMarkdown(voiceProvider, totalDurationOverride = null) {
+function sceneBreakdownMarkdown(voiceProvider, totalDurationOverride = null, nativeProof = null) {
 	const timeline = sceneTimeline(totalDurationOverride);
 	const totalDurationSec = timeline.length ? timeline[timeline.length - 1].endSec : 0;
 	return `# graphify Creator Cut 拆镜头稿
@@ -748,6 +787,10 @@ function sceneBreakdownMarkdown(voiceProvider, totalDurationOverride = null) {
 - 配音：\`${voiceProvider}\`
 - 总时长：\`${formatTimecode(totalDurationSec)}\`（约 ${totalDurationSec.toFixed(1)} 秒）
 - 镜头数：\`${timeline.length}\`
+${nativeProof ? `- 原生浏览器 proof：\`${nativeProof.video}\`（约 ${nativeProof.durationSec.toFixed(1)} 秒）
+- 原生 proof 页面：\`${nativeProof.html}\`
+- 原生 proof 步骤：\`${nativeProof.totalProofSteps}\`
+` : ""}
 
 ${timeline.map((scene) => `## ${scene.index}. ${scene.title}
 
@@ -765,7 +808,7 @@ ${timeline.map((scene) => `## ${scene.index}. ${scene.title}
 `;
 }
 
-function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null) {
+function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null, nativeProof = null) {
 	const timeline = sceneTimeline(totalDurationOverride);
 	const totalDurationSec = timeline.length ? timeline[timeline.length - 1].endSec : 0;
 	const cards = timeline.map((scene) => `
@@ -889,6 +932,9 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null) {
 					<li>Storyboard：<a href="real-demo-storyboard.json">real-demo-storyboard.json</a></li>
 					<li>总时长：${htmlEscape(formatTimecode(totalDurationSec))}</li>
 					<li>镜头数：${timeline.length}</li>
+					${nativeProof ? `<li>原生 proof 页面：<a href="${htmlEscape(nativeProof.html)}">${htmlEscape(nativeProof.html)}</a></li>
+					<li>原生 proof 视频：<a href="${htmlEscape(nativeProof.video)}">${htmlEscape(nativeProof.video)}</a></li>
+					<li>原生 proof：${nativeProof.totalProofSteps} 步 / ${nativeProof.durationSec.toFixed(1)} 秒</li>` : ""}
 				</ul>
 			</aside>
 		</div>
@@ -898,8 +944,9 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null) {
 			<a href="graphify-real-demo-blog.html">打开长文页</a>
 			<a href="graphify-real-demo-blog.md">打开 Markdown</a>
 			<a href="real-demo-storyboard.json">打开 Storyboard</a>
+			${nativeProof ? `<a href="${htmlEscape(nativeProof.html)}">打开原生 proof</a>` : ""}
 		</div>
-		<div class="callout">这版的重点不是再讲 README，而是直接按证据链发布：先结果，再报告，再查询，最后把 EXTRACTED / INFERRED 讲清楚。</div>
+		<div class="callout">这版的重点不是再讲 README，而是直接按证据链发布：先结果，再报告，再查询，最后把 EXTRACTED / INFERRED 讲清楚。${nativeProof ? "如果有人质疑 zoom 和选区是不是后期模拟，直接看原生浏览器 proof 那条。": ""}</div>
 		<section class="scene-list">
 			${cards}
 		</section>
@@ -1452,7 +1499,7 @@ function stageHtml() {
 </html>`;
 }
 
-function blogMarkdown(data) {
+function blogMarkdown(data, nativeProof = null) {
 	const top = data.stats.topNodes.slice(0, 6).map((node, index) => `${index + 1}. \`${node.label}\` - ${node.count} edges`).join("\n");
 	return `# 我把 graphify 的真实输出打开看了一遍：AI 缺的可能不是上下文，是地图
 
@@ -1516,7 +1563,17 @@ graphify 会把关系分成 \`EXTRACTED\` 和 \`INFERRED\`。这点比可视化�
 4. 用 query 输出证明它能按问题捞局部结构。
 5. 最后强调 EXTRACTED / INFERRED，这才是可复核的部分。
 
-一句话结论：graphify 值得讲，不是因为它能把代码画成图，而是因为它把项目阅读变成了可追问、可复用、可复核的地图。
+${nativeProof && nativeProof.confidenceStill ? `## 原生浏览器 proof 补足了什么
+
+我另外补了一条原生 GitHub 页面录屏，专门解决“这个 zoom 和选区是不是后期画出来的”这个问题。
+
+它直接在浏览器里做三步：点击、浏览器放大、鼠标拖选文本。最后把 \`EXTRACTED / INFERRED\` 那段单独保留成静态 proof 截图。
+
+![原生浏览器里的 EXTRACTED / INFERRED 选区](${nativeProof.confidenceStill})
+
+如果后面要发博客或发推，这条 proof 更像证据页，而不是讲解页。
+
+` : ""}一句话结论：graphify 值得讲，不是因为它能把代码画成图，而是因为它把项目阅读变成了可追问、可复用、可复核的地图。
 
 Source: https://github.com/kenchikuliu/graphify
 `;
@@ -1546,7 +1603,26 @@ function markdownToHtml(markdown) {
 	}).join("\n");
 }
 
-function blogHtml(markdown) {
+function blogHtml(markdown, nativeProof = null) {
+	const proofPanel = nativeProof ? `
+		<section class="proof-band">
+			<article class="proof-card">
+				<div class="proof-kicker">creator cut</div>
+				<h2>讲解版成片</h2>
+				<video controls preload="metadata" src="recordings/graphify-real-demo-cut.mp4" poster="scene-frames/01-hook.png"></video>
+				<p>这条是完整讲解版，适合直接发视频平台。</p>
+			</article>
+			<article class="proof-card">
+				<div class="proof-kicker">native proof</div>
+				<h2>原生浏览器证据版</h2>
+				<video controls preload="metadata" src="${htmlEscape(nativeProof.video)}" poster="${htmlEscape(nativeProof.cover)}"></video>
+				<p>这条保留真实 GitHub 页面里的点击、浏览器 zoom 和文本拖选，专门回答“这个效果是不是后期模拟”。</p>
+				<div class="proof-links">
+					<a href="${htmlEscape(nativeProof.html)}">打开 proof 页面</a>
+					<a href="${htmlEscape(nativeProof.markdown)}">查看 proof Markdown</a>
+				</div>
+			</article>
+		</section>` : "";
 	return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -1585,12 +1661,21 @@ function blogHtml(markdown) {
 		figure img { display:block; width:100%; height:auto; }
 		figcaption { padding:12px 14px; color:var(--muted); font-size:14px; border-top:1px solid rgba(16,23,32,.08); background:rgba(255,255,255,.4); }
 		.callout { margin:28px 0 36px; padding:18px 20px; border:1px solid rgba(180,84,55,.22); background:rgba(180,84,55,.08); border-radius:var(--r-md); color:#6d3324; font-size:17px; line-height:1.6; }
+		.proof-band { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:0 0 32px; }
+		.proof-card { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.9); box-shadow:0 14px 34px rgba(16,23,32,.07); overflow:hidden; }
+		.proof-card video { display:block; width:100%; background:#101824; }
+		.proof-card h2 { margin:0 16px 10px; font-size:28px; }
+		.proof-card p { margin:0; padding:0 16px 16px; font-size:16px; color:var(--muted); }
+		.proof-kicker { padding:14px 16px 8px; color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+		.proof-links { display:flex; gap:10px; flex-wrap:wrap; padding:0 16px 18px; }
+		.proof-links a { display:inline-flex; align-items:center; padding:9px 12px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(255,255,255,.55); text-decoration:none; font-weight:600; font-size:14px; }
 		.lightbox { position:fixed; inset:0; display:none; place-items:center; padding:28px; background:rgba(15,23,42,.86); z-index:100; }
 		.lightbox.open { display:grid; }
 		.lightbox img { max-width:96vw; max-height:92vh; border-radius:8px; box-shadow:0 22px 70px rgba(0,0,0,.42); }
 		@media (max-width: 900px) {
 			header { padding-left:24px; padding-right:24px; }
 			.hero-strap { grid-template-columns:1fr; }
+			.proof-band { grid-template-columns:1fr; }
 			header h1 { font-size:clamp(46px,13vw,72px); }
 			h1 { font-size:46px; }
 			h2 { font-size:34px; }
@@ -1615,6 +1700,7 @@ function blogHtml(markdown) {
 	</header>
 	<main>
 		<div class="callout">这篇不是“我看了 README 后的感受”，而是一次实测复盘：先看产物，再判断它是否真的适合放进 Agent 工作流。</div>
+		${proofPanel}
 		${markdownToHtml(markdown)}
 	</main>
 	<div class="lightbox" id="lightbox"><img alt="" /></div>
@@ -1701,6 +1787,7 @@ async function main() {
 	await fs.mkdir(assetsDir, { recursive: true });
 	await fs.mkdir(recordingsDir, { recursive: true });
 	const data = await loadDemoData();
+	const nativeProof = await loadNativeProofMeta();
 	const reuseFinalVideo = process.env.REUSE_FINAL_VIDEO === "1";
 	const finalMp4 = path.join(recordingsDir, "graphify-real-demo-cut.mp4");
 	await fs.writeFile(path.join(outDir, "frame.md"), frameMarkdown(), "utf8");
@@ -1709,9 +1796,9 @@ async function main() {
 		? { narration: path.join(narrationDir, "graphify-real-demo-narration.mp3"), ...(await loadExistingStoryboardMeta()) }
 		: await synthesizeAudio();
 	await fs.writeFile(path.join(outDir, "real-demo-stage.html"), stageHtml(), "utf8");
-	const md = blogMarkdown(data);
+	const md = blogMarkdown(data, nativeProof);
 	await fs.writeFile(path.join(outDir, "graphify-real-demo-blog.md"), md, "utf8");
-	await fs.writeFile(path.join(outDir, "graphify-real-demo-blog.html"), blogHtml(md), "utf8");
+	await fs.writeFile(path.join(outDir, "graphify-real-demo-blog.html"), blogHtml(md, nativeProof), "utf8");
 	await fs.writeFile(path.join(outDir, "real-demo-storyboard.json"), JSON.stringify({ voiceProvider, scenes }, null, 2), "utf8");
 	if (reuseFinalVideo) {
 		await fs.access(finalMp4);
@@ -1742,8 +1829,8 @@ async function main() {
 	const finalDurationSec = ffprobeDuration(finalMp4);
 	await extractReviewFrames(finalMp4);
 	await extractSceneFrames(finalMp4, finalDurationSec);
-	await fs.writeFile(path.join(outDir, "graphify-real-demo-scenes.md"), sceneBreakdownMarkdown(voiceProvider, finalDurationSec), "utf8");
-	await fs.writeFile(path.join(outDir, "graphify-real-demo-scenes.html"), sceneBreakdownHtml(voiceProvider, finalDurationSec), "utf8");
+	await fs.writeFile(path.join(outDir, "graphify-real-demo-scenes.md"), sceneBreakdownMarkdown(voiceProvider, finalDurationSec, nativeProof), "utf8");
+	await fs.writeFile(path.join(outDir, "graphify-real-demo-scenes.html"), sceneBreakdownHtml(voiceProvider, finalDurationSec, nativeProof), "utf8");
 	console.log(`voice_provider=${voiceProvider}`);
 	console.log(`video=${finalMp4}`);
 	console.log(`blog_html=${path.join(outDir, "graphify-real-demo-blog.html")}`);

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>graphify native selection proof</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+	<style>
+		:root {
+			--canvas:#f5efe6;
+			--paper:#fcf8f1;
+			--ink:#101720;
+			--muted:#5f6b76;
+			--line:#d7ccb9;
+			--accent:#1f5ed7;
+			--signal:#0d6d66;
+			--clay:#b45437;
+			--display:"IBM Plex Sans Condensed","Arial Narrow",sans-serif;
+			--body:"IBM Plex Sans","Segoe UI",sans-serif;
+			--mono:"IBM Plex Mono",Consolas,monospace;
+		}
+		* { box-sizing:border-box; }
+		body { margin:0; background:var(--canvas); color:var(--ink); font-family:var(--body); line-height:1.75; }
+		body::before { content:""; position:fixed; inset:18px; border:1px solid rgba(16,23,32,.07); pointer-events:none; }
+		a { color:var(--accent); }
+		header { padding:56px max(28px,calc((100vw - 1120px)/2)) 42px; background:
+			linear-gradient(180deg, rgba(245,239,230,.95), rgba(252,248,241,.92)),
+			repeating-linear-gradient(90deg, rgba(16,23,32,.03) 0 1px, transparent 1px 130px);
+			border-bottom:1px solid rgba(16,23,32,.08); }
+		.eyebrow { display:inline-flex; align-items:center; gap:12px; color:var(--signal); font-weight:700; letter-spacing:.09em; text-transform:uppercase; }
+		.eyebrow::before { content:""; width:26px; height:2px; background:var(--signal); }
+		h1 { margin:16px 0 18px; max-width:980px; font:700 clamp(48px,6vw,92px)/.94 var(--display); text-transform:uppercase; }
+		header p { max-width:780px; margin:0; color:var(--muted); font-size:21px; font-weight:500; }
+		.header-grid { display:grid; grid-template-columns:1.18fr .82fr; gap:18px; margin-top:30px; }
+		.video-card, .facts { border:1px solid rgba(16,23,32,.08); border-radius:14px; background:rgba(252,248,241,.88); box-shadow:0 14px 36px rgba(16,23,32,.07); overflow:hidden; }
+		.video-card video { display:block; width:100%; background:#111827; }
+		.video-card .video-copy { padding:14px 16px 18px; color:var(--muted); font-size:15px; }
+		.facts { padding:18px 20px; }
+		.facts h2 { margin:0 0 12px; font:700 24px/1 var(--display); text-transform:uppercase; }
+		.facts ul { margin:0; padding-left:18px; }
+		.facts li { margin:0 0 10px; font-size:16px; color:#1f2c37; }
+		main { max-width:1040px; margin:0 auto; padding:42px 24px 92px; }
+		.callout { margin:0 0 32px; padding:18px 20px; border:1px solid rgba(180,84,55,.22); background:rgba(180,84,55,.08); border-radius:14px; color:#6d3324; font-size:17px; line-height:1.6; }
+		.step-list { display:grid; gap:22px; }
+		.step-card { border:1px solid rgba(16,23,32,.08); border-radius:14px; background:rgba(252,248,241,.92); box-shadow:0 14px 34px rgba(16,23,32,.07); overflow:hidden; }
+		.step-meta { display:flex; justify-content:space-between; gap:18px; padding:18px 20px 12px; }
+		.step-kicker { color:var(--signal); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+		.step-meta h2 { margin:0; font:700 34px/.98 var(--display); text-transform:uppercase; }
+		.step-time { color:var(--muted); font-family:var(--mono); font-size:14px; white-space:nowrap; }
+		figure { margin:0; border-top:1px solid rgba(16,23,32,.08); }
+		figure img { display:block; width:100%; height:auto; }
+		figcaption { padding:12px 14px; color:var(--muted); font-size:15px; border-top:1px solid rgba(16,23,32,.08); background:rgba(255,255,255,.45); }
+		@media (max-width: 900px) {
+			header { padding-left:24px; padding-right:24px; }
+			h1 { font-size:clamp(42px,12vw,72px); }
+			.header-grid { grid-template-columns:1fr; }
+			.step-meta { display:block; }
+			.step-time { margin-top:12px; display:block; }
+			.step-meta h2 { font-size:28px; }
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="eyebrow">native browser proof</div>
+		<h1>这条 proof video 用的是真实 GitHub 页面</h1>
+		<p>不是后期模拟选区，也不是 HTML 里画上去的框。这里直接录浏览器里的真实鼠标、真实缩放和原生蓝色文本选区。</p>
+		<div class="header-grid">
+			<section class="video-card">
+				<video controls preload="metadata" src="recordings/graphify-live-selection-proof.mp4" poster="screenshots/live-selection-cover.png"></video>
+				<div class="video-copy">总时长约 43.9 秒。每一步都来自真实 README 页面上的鼠标点击、浏览器 zoom 和文本拖选。</div>
+			</section>
+			<aside class="facts">
+				<h2>Proof Pack</h2>
+				<ul>
+					<li>视频：<a href="recordings/graphify-live-selection-proof.mp4">graphify-live-selection-proof.mp4</a></li>
+					<li>事件：<a href="live-selection-events.json">live-selection-events.json</a></li>
+					<li>Markdown：<a href="graphify-live-selection-proof.md">graphify-live-selection-proof.md</a></li>
+					<li>来源：<a href="https://github.com/kenchikuliu/graphify">https://github.com/kenchikuliu/graphify</a></li>
+					<li>步骤数：3</li>
+				</ul>
+			</aside>
+		</div>
+	</header>
+	<main>
+		<div class="callout">这条 proof 的用途很明确：补足 creator cut 里最容易被质疑的部分，也就是“选区和 zoom 是不是原生浏览器效果”。</div>
+		<section class="step-list">
+			
+		<article class="step-card">
+			<div class="step-meta">
+				<div>
+					<div class="step-kicker">native proof</div>
+					<h2>01. Repo Thesis</h2>
+				</div>
+				<div class="step-time">1.0s - 15.0s</div>
+			</div>
+			<figure>
+				<img src="screenshots/live-selection-hook.png" alt="Repo Thesis" />
+				<figcaption>我先圈这句，因为它把 graphify 的价值说得很直白：不是继续堆上下文，而是先还原结构。</figcaption>
+			</figure>
+		</article>
+	
+
+		<article class="step-card">
+			<div class="step-meta">
+				<div>
+					<div class="step-kicker">native proof</div>
+					<h2>02. Compression Proof</h2>
+				</div>
+				<div class="step-time">15.0s - 27.9s</div>
+			</div>
+			<figure>
+				<img src="screenshots/live-selection-quote.png" alt="Compression Proof" />
+				<figcaption>这一段适合做 hook。它不是抽象理念，而是直接把收益压到一句话里。</figcaption>
+			</figure>
+		</article>
+	
+
+		<article class="step-card">
+			<div class="step-meta">
+				<div>
+					<div class="step-kicker">native proof</div>
+					<h2>03. Three Passes</h2>
+				</div>
+				<div class="step-time">27.9s - 41.4s</div>
+			</div>
+			<figure>
+				<img src="screenshots/live-selection-pipeline.png" alt="Three Passes" />
+				<figcaption>真正该放大的不是功能清单，而是这段机制说明。三段式流程决定它到底是不是工具链，而不只是可视化外壳。</figcaption>
+			</figure>
+		</article>
+	
+			<article class="step-card">
+				<div class="step-meta">
+					<div>
+						<div class="step-kicker">static proof</div>
+						<h2>04. Confidence Split</h2>
+					</div>
+					<div class="step-time">still frame</div>
+				</div>
+				<figure>
+					<img src="screenshots/live-selection-confidence.png" alt="Confidence Split" />
+					<figcaption>最后这张静态 proof 单独保留 EXTRACTED / INFERRED 的真实浏览器选区，避免长录屏在这一段变得拖沓。</figcaption>
+				</figure>
+			</article>
+		</section>
+	</main>
+</body>
+</html>

@@ -65,6 +65,16 @@ graphify 会把关系分成 `EXTRACTED` 和 `INFERRED`。这点比可视化本�
 4. 用 query 输出证明它能按问题捞局部结构。
 5. 最后强调 EXTRACTED / INFERRED，这才是可复核的部分。
 
+## 原生浏览器 proof 补足了什么
+
+我另外补了一条原生 GitHub 页面录屏，专门解决“这个 zoom 和选区是不是后期画出来的”这个问题。
+
+它直接在浏览器里做三步：点击、浏览器放大、鼠标拖选文本。最后把 `EXTRACTED / INFERRED` 那段单独保留成静态 proof 截图。
+
+![原生浏览器里的 EXTRACTED / INFERRED 选区](screenshots/live-selection-confidence.png)
+
+如果后面要发博客或发推，这条 proof 更像证据页，而不是讲解页。
+
 一句话结论：graphify 值得讲，不是因为它能把代码画成图，而是因为它把项目阅读变成了可追问、可复用、可复核的地图。
 
 Source: https://github.com/kenchikuliu/graphify

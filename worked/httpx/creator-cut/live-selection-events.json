@@ -1,0 +1,63 @@
+{
+  "source": "https://github.com/kenchikuliu/graphify",
+  "generatedAt": "2026-06-10T13:54:59.761Z",
+  "durationSec": 43.866667,
+  "capture": {
+    "offsetX": 80,
+    "offsetY": 40,
+    "width": 1400,
+    "height": 960,
+    "windowWidth": 1400,
+    "windowHeight": 960,
+    "viewportWidth": 1280,
+    "viewportHeight": 820
+  },
+  "video": "recordings/graphify-live-selection-proof.mp4",
+  "events": [
+    {
+      "id": "hook",
+      "label": "Repo Thesis",
+      "note": "我先圈这句，因为它把 graphify 的价值说得很直白：不是继续堆上下文，而是先还原结构。",
+      "probe": "it reads your files, builds a knowledge graph, and gives you back structure you didn't know was there",
+      "screenshot": "screenshots/live-selection-hook.png",
+      "selection": {
+        "x": 70,
+        "y": 391,
+        "width": 808,
+        "height": 48
+      },
+      "startSec": 1,
+      "endSec": 14.962
+    },
+    {
+      "id": "quote",
+      "label": "Compression Proof",
+      "note": "这一段适合做 hook。它不是抽象理念，而是直接把收益压到一句话里。",
+      "probe": "graphify is the answer to that problem - 71.5x fewer tokens per query vs reading the raw files",
+      "screenshot": "screenshots/live-selection-quote.png",
+      "selection": {
+        "x": 70,
+        "y": 615,
+        "width": 808,
+        "height": 48
+      },
+      "startSec": 15,
+      "endSec": 27.881
+    },
+    {
+      "id": "pipeline",
+      "label": "Three Passes",
+      "note": "真正该放大的不是功能清单，而是这段机制说明。三段式流程决定它到底是不是工具链，而不只是可视化外壳。",
+      "probe": "graphify runs in three passes. First, a deterministic AST pass extracts structure from code files",
+      "screenshot": "screenshots/live-selection-pipeline.png",
+      "selection": {
+        "x": 70,
+        "y": 374,
+        "width": 808,
+        "height": 64
+      },
+      "startSec": 27.92,
+      "endSec": 41.435
+    }
+  ]
+}

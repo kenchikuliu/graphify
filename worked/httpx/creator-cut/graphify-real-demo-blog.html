@@ -58,12 +58,21 @@
 		figure img { display:block; width:100%; height:auto; }
 		figcaption { padding:12px 14px; color:var(--muted); font-size:14px; border-top:1px solid rgba(16,23,32,.08); background:rgba(255,255,255,.4); }
 		.callout { margin:28px 0 36px; padding:18px 20px; border:1px solid rgba(180,84,55,.22); background:rgba(180,84,55,.08); border-radius:var(--r-md); color:#6d3324; font-size:17px; line-height:1.6; }
+		.proof-band { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:0 0 32px; }
+		.proof-card { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.9); box-shadow:0 14px 34px rgba(16,23,32,.07); overflow:hidden; }
+		.proof-card video { display:block; width:100%; background:#101824; }
+		.proof-card h2 { margin:0 16px 10px; font-size:28px; }
+		.proof-card p { margin:0; padding:0 16px 16px; font-size:16px; color:var(--muted); }
+		.proof-kicker { padding:14px 16px 8px; color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+		.proof-links { display:flex; gap:10px; flex-wrap:wrap; padding:0 16px 18px; }
+		.proof-links a { display:inline-flex; align-items:center; padding:9px 12px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(255,255,255,.55); text-decoration:none; font-weight:600; font-size:14px; }
 		.lightbox { position:fixed; inset:0; display:none; place-items:center; padding:28px; background:rgba(15,23,42,.86); z-index:100; }
 		.lightbox.open { display:grid; }
 		.lightbox img { max-width:96vw; max-height:92vh; border-radius:8px; box-shadow:0 22px 70px rgba(0,0,0,.42); }
 		@media (max-width: 900px) {
 			header { padding-left:24px; padding-right:24px; }
 			.hero-strap { grid-template-columns:1fr; }
+			.proof-band { grid-template-columns:1fr; }
 			header h1 { font-size:clamp(46px,13vw,72px); }
 			h1 { font-size:46px; }
 			h2 { font-size:34px; }
@@ -88,6 +97,25 @@
 	</header>
 	<main>
 		<div class="callout">这篇不是“我看了 README 后的感受”，而是一次实测复盘：先看产物，再判断它是否真的适合放进 Agent 工作流。</div>
+		
+		<section class="proof-band">
+			<article class="proof-card">
+				<div class="proof-kicker">creator cut</div>
+				<h2>讲解版成片</h2>
+				<video controls preload="metadata" src="recordings/graphify-real-demo-cut.mp4" poster="scene-frames/01-hook.png"></video>
+				<p>这条是完整讲解版，适合直接发视频平台。</p>
+			</article>
+			<article class="proof-card">
+				<div class="proof-kicker">native proof</div>
+				<h2>原生浏览器证据版</h2>
+				<video controls preload="metadata" src="recordings/graphify-live-selection-proof.mp4" poster="screenshots/live-selection-cover.png"></video>
+				<p>这条保留真实 GitHub 页面里的点击、浏览器 zoom 和文本拖选，专门回答“这个效果是不是后期模拟”。</p>
+				<div class="proof-links">
+					<a href="graphify-live-selection-proof.html">打开 proof 页面</a>
+					<a href="graphify-live-selection-proof.md">查看 proof Markdown</a>
+				</div>
+			</article>
+		</section>
 		<h1>我把 graphify 的真实输出打开看了一遍：AI 缺的可能不是上下文，是地图</h1>
 <p>这版我不再写成 README 介绍，而是按实测证据链来拆 graphify。</p>
 <p>我用仓库里的 <code>worked/httpx</code> 样例看了四个产物：<code>graph.html</code>、<code>GRAPH_REPORT.md</code>、<code>graph.json</code> 和 <code>graphify query</code> 输出。这个样例的图谱是 144 个节点、330 条边、6 个社区。</p>
@@ -115,6 +143,11 @@
 <h2>我会怎么发布这篇内容</h2>
 <p>视频结构应该这样走：</p>
 <ol><li>开场直接给结论：AI 缺的不是更长上下文，而是地图。</li><li>展示真实输出：graph.html、GRAPH_REPORT.md、graph.json、query。</li><li>放大 god nodes，让观众看到 Client / AsyncClient / Response 是主线。</li><li>用 query 输出证明它能按问题捞局部结构。</li><li>最后强调 EXTRACTED / INFERRED，这才是可复核的部分。</li></ol>
+<h2>原生浏览器 proof 补足了什么</h2>
+<p>我另外补了一条原生 GitHub 页面录屏，专门解决“这个 zoom 和选区是不是后期画出来的”这个问题。</p>
+<p>它直接在浏览器里做三步：点击、浏览器放大、鼠标拖选文本。最后把 <code>EXTRACTED / INFERRED</code> 那段单独保留成静态 proof 截图。</p>
+<figure><button class="zoom" data-img="screenshots/live-selection-confidence.png" aria-label="open image"><img src="screenshots/live-selection-confidence.png" alt="原生浏览器里的 EXTRACTED / INFERRED 选区" /></button><figcaption>原生浏览器里的 EXTRACTED / INFERRED 选区</figcaption></figure>
+<p>如果后面要发博客或发推，这条 proof 更像证据页，而不是讲解页。</p>
 <p>一句话结论：graphify 值得讲，不是因为它能把代码画成图，而是因为它把项目阅读变成了可追问、可复用、可复核的地图。</p>
 <p>Source: <a href="https://github.com/kenchikuliu/graphify">https://github.com/kenchikuliu/graphify</a></p>
 	</main>

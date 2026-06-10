@@ -7,6 +7,10 @@
 - 配音：`elevenlabs`
 - 总时长：`01:26`（约 86.7 秒）
 - 镜头数：`7`
+- 原生浏览器 proof：`recordings/graphify-live-selection-proof.mp4`（约 43.9 秒）
+- 原生 proof 页面：`graphify-live-selection-proof.html`
+- 原生 proof 步骤：`4`
+
 
 ## 1. AI 读大项目缺的不是更长上下文
 
