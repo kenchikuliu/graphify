@@ -60,7 +60,10 @@
 		.scene-meta h2 { margin:0; font:700 34px/.98 var(--display); text-transform:uppercase; }
 		.scene-time { flex:0 0 auto; display:grid; gap:6px; text-align:right; color:var(--muted); font-size:13px; }
 		.scene-time b { color:var(--ink); font-family:var(--mono); font-size:14px; }
-		figure { margin:0; border-top:1px solid rgba(16,23,32,.08); border-bottom:1px solid rgba(16,23,32,.08); background:rgba(255,255,255,.4); }
+		.media-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; border-top:1px solid rgba(16,23,32,.08); border-bottom:1px solid rgba(16,23,32,.08); }
+		figure { margin:0; background:rgba(255,255,255,.4); min-width:0; }
+		figure + figure { border-left:1px solid rgba(16,23,32,.08); }
+		.figure-label { display:flex; align-items:center; min-height:42px; padding:0 14px; border-bottom:1px solid rgba(16,23,32,.08); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); background:rgba(252,248,241,.82); }
 		figure button { display:block; width:100%; border:0; padding:0; background:transparent; cursor:zoom-in; }
 		figure img { display:block; width:100%; height:auto; }
 		figcaption { padding:12px 14px; color:var(--muted); font-size:14px; background:rgba(255,255,255,.45); }
@@ -68,6 +71,8 @@
 		.scene-copy p { margin:0 0 12px; font-size:18px; color:#1f2c37; }
 		.scene-copy p:last-child { margin-bottom:0; }
 		.scene-subtitle { color:var(--accent); font-weight:700; }
+		.scene-proof-path { color:var(--muted); font-size:15px; }
+		.scene-proof-path code { font-size:14px; }
 		.lightbox { position:fixed; inset:0; display:none; place-items:center; padding:28px; background:rgba(15,23,42,.86); z-index:100; }
 		.lightbox.open { display:grid; }
 		.lightbox img { max-width:96vw; max-height:92vh; border-radius:8px; box-shadow:0 22px 70px rgba(0,0,0,.42); }
@@ -78,6 +83,8 @@
 			.scene-meta { display:block; }
 			.scene-time { margin-top:14px; text-align:left; }
 			.scene-meta h2 { font-size:28px; }
+			.media-grid { grid-template-columns:1fr; }
+			figure + figure { border-left:0; border-top:1px solid rgba(16,23,32,.08); }
 		}
 	</style>
 </head>
@@ -123,15 +130,26 @@
 					<span>9.3s</span>
 				</div>
 			</div>
-			<figure>
-				<button class="zoom" data-img="scene-frames/01-hook.png" aria-label="open image">
-					<img src="scene-frames/01-hook.png" alt="AI 读大项目缺的不是更长上下文" />
-				</button>
-				<figcaption>我这版直接看 graphify 的真实输出：graph.html、GRAPH_REPORT.md、graph.json 和 query 结果。</figcaption>
-			</figure>
+			<div class="media-grid">
+				<figure>
+					<div class="figure-label">Video Frame</div>
+					<button class="zoom" data-img="scene-frames/01-hook.png" aria-label="open image">
+						<img src="scene-frames/01-hook.png" alt="AI 读大项目缺的不是更长上下文 视频代表帧" />
+					</button>
+					<figcaption>成片代表帧。用来对齐镜头节奏和标题判断。</figcaption>
+				</figure>
+				<figure>
+					<div class="figure-label">Source Proof</div>
+					<button class="zoom" data-img="screenshots/01-graph-html.png" aria-label="open image">
+						<img src="screenshots/01-graph-html.png" alt="AI 读大项目缺的不是更长上下文 原始证据截图" />
+					</button>
+					<figcaption>我这版直接看 graphify 的真实输出：graph.html、GRAPH_REPORT.md、graph.json 和 query 结果。</figcaption>
+				</figure>
+			</div>
 			<div class="scene-copy">
 				<p class="scene-subtitle">它先需要一张能追问的地图。</p>
 				<p>这一版我不再复述 README，直接看 graphify 的真实输出。我的判断是：AI 读大项目迷路，不一定是上下文不够，它先需要一张能追问的地图。</p>
+				<p class="scene-proof-path">博客正文优先截图：<code>screenshots/01-graph-html.png</code></p>
 			</div>
 		</article>
 	
@@ -147,15 +165,26 @@
 					<span>15.8s</span>
 				</div>
 			</div>
-			<figure>
-				<button class="zoom" data-img="scene-frames/02-outputs.png" aria-label="open image">
-					<img src="scene-frames/02-outputs.png" alt="我只认这四个产物" />
-				</button>
-				<figcaption>这次用 worked/httpx 示例：144 nodes、330 edges、6 communities，报告和 JSON 统计一致。</figcaption>
-			</figure>
+			<div class="media-grid">
+				<figure>
+					<div class="figure-label">Video Frame</div>
+					<button class="zoom" data-img="scene-frames/02-outputs.png" aria-label="open image">
+						<img src="scene-frames/02-outputs.png" alt="我只认这四个产物 视频代表帧" />
+					</button>
+					<figcaption>成片代表帧。用来对齐镜头节奏和标题判断。</figcaption>
+				</figure>
+				<figure>
+					<div class="figure-label">Source Proof</div>
+					<button class="zoom" data-img="screenshots/02-output-proof.png" aria-label="open image">
+						<img src="screenshots/02-output-proof.png" alt="我只认这四个产物 原始证据截图" />
+					</button>
+					<figcaption>这次用 worked/httpx 示例：144 nodes、330 edges、6 communities，报告和 JSON 统计一致。</figcaption>
+				</figure>
+			</div>
 			<div class="scene-copy">
 				<p class="scene-subtitle">图给人看，报告给 Agent 定向，JSON 给查询。</p>
 				<p>我只认这四个产物。graph 点 html 给人点开看，GRAPH_REPORT 点 md 给 Agent 定向，graph 点 json 作为查询底座，再加一条 graphify query 的结果。这个 httpx 示例是 144 个节点，330 条边，6 个社区。</p>
+				<p class="scene-proof-path">博客正文优先截图：<code>screenshots/02-output-proof.png</code></p>
 			</div>
 		</article>
 	
@@ -171,15 +200,26 @@
 					<span>13.6s</span>
 				</div>
 			</div>
-			<figure>
-				<button class="zoom" data-img="scene-frames/03-report.png" aria-label="open image">
-					<img src="scene-frames/03-report.png" alt="GRAPH_REPORT.md 像一张读项目路线图" />
-				</button>
-				<figcaption>Client、AsyncClient、Response、Request 这些节点被排在最前面，Agent 不必从文件树盲扫。</figcaption>
-			</figure>
+			<div class="media-grid">
+				<figure>
+					<div class="figure-label">Video Frame</div>
+					<button class="zoom" data-img="scene-frames/03-report.png" aria-label="open image">
+						<img src="scene-frames/03-report.png" alt="GRAPH_REPORT.md 像一张读项目路线图 视频代表帧" />
+					</button>
+					<figcaption>成片代表帧。用来对齐镜头节奏和标题判断。</figcaption>
+				</figure>
+				<figure>
+					<div class="figure-label">Source Proof</div>
+					<button class="zoom" data-img="screenshots/03-report-proof.png" aria-label="open image">
+						<img src="screenshots/03-report-proof.png" alt="GRAPH_REPORT.md 像一张读项目路线图 原始证据截图" />
+					</button>
+					<figcaption>Client、AsyncClient、Response、Request 这些节点被排在最前面，Agent 不必从文件树盲扫。</figcaption>
+				</figure>
+			</div>
 			<div class="scene-copy">
 				<p class="scene-subtitle">先告诉你 god nodes，再告诉你哪些连接值得怀疑。</p>
 				<p>GRAPH_REPORT 点 md 最适合给 Agent 先读。它先把 god nodes 排出来，Client、AsyncClient、Response、Request 都在前面。也就是说，Agent 不必从文件树盲扫，而是先知道架构主线在哪里。</p>
+				<p class="scene-proof-path">博客正文优先截图：<code>screenshots/03-report-proof.png</code></p>
 			</div>
 		</article>
 	
@@ -195,15 +235,26 @@
 					<span>12.7s</span>
 				</div>
 			</div>
-			<figure>
-				<button class="zoom" data-img="scene-frames/04-graph.png" aria-label="open image">
-					<img src="scene-frames/04-graph.png" alt="graph.html 不是装饰图" />
-				</button>
-				<figcaption>中心的大节点和右侧社区一起看，能快速发现 Client 如何跨 transport、auth、models 和 errors。</figcaption>
-			</figure>
+			<div class="media-grid">
+				<figure>
+					<div class="figure-label">Video Frame</div>
+					<button class="zoom" data-img="scene-frames/04-graph.png" aria-label="open image">
+						<img src="scene-frames/04-graph.png" alt="graph.html 不是装饰图 视频代表帧" />
+					</button>
+					<figcaption>成片代表帧。用来对齐镜头节奏和标题判断。</figcaption>
+				</figure>
+				<figure>
+					<div class="figure-label">Source Proof</div>
+					<button class="zoom" data-img="screenshots/01-graph-html.png" aria-label="open image">
+						<img src="screenshots/01-graph-html.png" alt="graph.html 不是装饰图 原始证据截图" />
+					</button>
+					<figcaption>中心的大节点和右侧社区一起看，能快速发现 Client 如何跨 transport、auth、models 和 errors。</figcaption>
+				</figure>
+			</div>
 			<div class="scene-copy">
 				<p class="scene-subtitle">右侧社区列表让你直接看模块边界。</p>
 				<p>graph 点 html 也不是装饰图。你看右侧社区列表，再看中心的大节点，就能很快发现 Client 是怎么跨 transport、auth、models 和 errors 的。这个画面比单纯看目录更像地图。</p>
+				<p class="scene-proof-path">博客正文优先截图：<code>screenshots/01-graph-html.png</code></p>
 			</div>
 		</article>
 	
@@ -219,15 +270,26 @@
 					<span>12.2s</span>
 				</div>
 			</div>
-			<figure>
-				<button class="zoom" data-img="scene-frames/05-query.png" aria-label="open image">
-					<img src="scene-frames/05-query.png" alt="query 返回的是子图，不是一句漂亮摘要" />
-				</button>
-				<figcaption>这就适合接到真实工作流：先拿局部结构，再回到源码复核。</figcaption>
-			</figure>
+			<div class="media-grid">
+				<figure>
+					<div class="figure-label">Video Frame</div>
+					<button class="zoom" data-img="scene-frames/05-query.png" aria-label="open image">
+						<img src="scene-frames/05-query.png" alt="query 返回的是子图，不是一句漂亮摘要 视频代表帧" />
+					</button>
+					<figcaption>成片代表帧。用来对齐镜头节奏和标题判断。</figcaption>
+				</figure>
+				<figure>
+					<div class="figure-label">Source Proof</div>
+					<button class="zoom" data-img="screenshots/04-query-client.png" aria-label="open image">
+						<img src="screenshots/04-query-client.png" alt="query 返回的是子图，不是一句漂亮摘要 原始证据截图" />
+					</button>
+					<figcaption>这就适合接到真实工作流：先拿局部结构，再回到源码复核。</figcaption>
+				</figure>
+			</div>
 			<div class="scene-copy">
 				<p class="scene-subtitle">NODE 和 EDGE 都带来源、位置和关系。</p>
 				<p>更关键的是 query。它返回的不是一句漂亮摘要，而是一段子图。NODE 有来源文件和行号，EDGE 有关系和置信标记。真实工作流里，你可以先拿局部结构，再回到源码复核。</p>
+				<p class="scene-proof-path">博客正文优先截图：<code>screenshots/04-query-client.png</code></p>
 			</div>
 		</article>
 	
@@ -243,15 +305,26 @@
 					<span>11.2s</span>
 				</div>
 			</div>
-			<figure>
-				<button class="zoom" data-img="scene-frames/06-confidence.png" aria-label="open image">
-					<img src="scene-frames/06-confidence.png" alt="关系有置信度，才方便复核" />
-				</button>
-				<figcaption>这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。</figcaption>
-			</figure>
+			<div class="media-grid">
+				<figure>
+					<div class="figure-label">Video Frame</div>
+					<button class="zoom" data-img="scene-frames/06-confidence.png" aria-label="open image">
+						<img src="scene-frames/06-confidence.png" alt="关系有置信度，才方便复核 视频代表帧" />
+					</button>
+					<figcaption>成片代表帧。用来对齐镜头节奏和标题判断。</figcaption>
+				</figure>
+				<figure>
+					<div class="figure-label">Source Proof</div>
+					<button class="zoom" data-img="screenshots/05-confidence.png" aria-label="open image">
+						<img src="screenshots/05-confidence.png" alt="关系有置信度，才方便复核 原始证据截图" />
+					</button>
+					<figcaption>这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。</figcaption>
+				</figure>
+			</div>
 			<div class="scene-copy">
 				<p class="scene-subtitle">EXTRACTED 和 INFERRED 分开，减少幻觉污染。</p>
 				<p>我最看重的是置信度。EXTRACTED 是原文抽到的，INFERRED 是模型推断的。一个工具愿意把这两类分开，才适合给 AI assistant 用，因为你知道哪些地方需要复核。</p>
+				<p class="scene-proof-path">博客正文优先截图：<code>screenshots/05-confidence.png</code></p>
 			</div>
 		</article>
 	
@@ -267,15 +340,26 @@
 					<span>11.9s</span>
 				</div>
 			</div>
-			<figure>
-				<button class="zoom" data-img="scene-frames/07-close.png" aria-label="open image">
-					<img src="scene-frames/07-close.png" alt="这篇就按“实测证据链”来写" />
-				</button>
-				<figcaption>一句话结论：给 Agent 地图，而不是无休止塞上下文。</figcaption>
-			</figure>
+			<div class="media-grid">
+				<figure>
+					<div class="figure-label">Video Frame</div>
+					<button class="zoom" data-img="scene-frames/07-close.png" aria-label="open image">
+						<img src="scene-frames/07-close.png" alt="这篇就按“实测证据链”来写 视频代表帧" />
+					</button>
+					<figcaption>成片代表帧。用来对齐镜头节奏和标题判断。</figcaption>
+				</figure>
+				<figure>
+					<div class="figure-label">Source Proof</div>
+					<button class="zoom" data-img="screenshots/02-output-proof.png" aria-label="open image">
+						<img src="screenshots/02-output-proof.png" alt="这篇就按“实测证据链”来写 原始证据截图" />
+					</button>
+					<figcaption>一句话结论：给 Agent 地图，而不是无休止塞上下文。</figcaption>
+				</figure>
+			</div>
 			<div class="scene-copy">
 				<p class="scene-subtitle">先结果，再报告，再查询，最后讲接入方式。</p>
 				<p>所以这篇图文和视频，我会按实测证据链来写：先看结果，再看报告，再看查询，最后讲怎么接到 Agent 工作流。结论就一句话：给 Agent 地图，而不是无休止塞上下文。</p>
+				<p class="scene-proof-path">博客正文优先截图：<code>screenshots/02-output-proof.png</code></p>
 			</div>
 		</article>
 	

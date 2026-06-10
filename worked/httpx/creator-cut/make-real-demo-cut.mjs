@@ -731,6 +731,7 @@ function sceneTimeline(totalDurationOverride = null) {
 			endLabel: formatTimecode(Math.max(startSec, endSec - 0.01)),
 			durationLabel: `${durationSec.toFixed(1)}s`,
 			frameFile: `scene-frames/${String(index + 1).padStart(2, "0")}-${scene.id}.png`,
+			sourceImage: scene.image,
 		};
 	});
 }
@@ -750,12 +751,15 @@ function sceneBreakdownMarkdown(voiceProvider, totalDurationOverride = null) {
 
 ${timeline.map((scene) => `## ${scene.index}. ${scene.title}
 
-![${scene.title}](${scene.frameFile})
+![${scene.title} - 视频代表帧](${scene.frameFile})
+
+![${scene.title} - 原始证据截图](${scene.sourceImage})
 
 - 时间：${scene.startLabel} - ${scene.endLabel}
 - Kicker：${scene.kicker}
 - Subtitle：${scene.subtitle}
 - Caption：${scene.caption}
+- 博客正文优先截图：${scene.sourceImage}
 - 旁白：${scene.narration}
 `).join("\n")}
 `;
@@ -776,15 +780,26 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null) {
 					<span>${htmlEscape(scene.durationLabel)}</span>
 				</div>
 			</div>
-			<figure>
-				<button class="zoom" data-img="${htmlEscape(scene.frameFile)}" aria-label="open image">
-					<img src="${htmlEscape(scene.frameFile)}" alt="${htmlEscape(scene.title)}" />
-				</button>
-				<figcaption>${htmlEscape(scene.caption)}</figcaption>
-			</figure>
+			<div class="media-grid">
+				<figure>
+					<div class="figure-label">Video Frame</div>
+					<button class="zoom" data-img="${htmlEscape(scene.frameFile)}" aria-label="open image">
+						<img src="${htmlEscape(scene.frameFile)}" alt="${htmlEscape(scene.title)} 视频代表帧" />
+					</button>
+					<figcaption>成片代表帧。用来对齐镜头节奏和标题判断。</figcaption>
+				</figure>
+				<figure>
+					<div class="figure-label">Source Proof</div>
+					<button class="zoom" data-img="${htmlEscape(scene.sourceImage)}" aria-label="open image">
+						<img src="${htmlEscape(scene.sourceImage)}" alt="${htmlEscape(scene.title)} 原始证据截图" />
+					</button>
+					<figcaption>${htmlEscape(scene.caption)}</figcaption>
+				</figure>
+			</div>
 			<div class="scene-copy">
 				<p class="scene-subtitle">${htmlEscape(scene.subtitle)}</p>
 				<p>${htmlEscape(scene.narration)}</p>
+				<p class="scene-proof-path">博客正文优先截图：<code>${htmlEscape(scene.sourceImage)}</code></p>
 			</div>
 		</article>
 	`).join("\n");
@@ -828,7 +843,10 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null) {
 		.scene-meta h2 { margin:0; font:700 34px/.98 var(--display); text-transform:uppercase; }
 		.scene-time { flex:0 0 auto; display:grid; gap:6px; text-align:right; color:var(--muted); font-size:13px; }
 		.scene-time b { color:var(--ink); font-family:var(--mono); font-size:14px; }
-		figure { margin:0; border-top:1px solid rgba(16,23,32,.08); border-bottom:1px solid rgba(16,23,32,.08); background:rgba(255,255,255,.4); }
+		.media-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; border-top:1px solid rgba(16,23,32,.08); border-bottom:1px solid rgba(16,23,32,.08); }
+		figure { margin:0; background:rgba(255,255,255,.4); min-width:0; }
+		figure + figure { border-left:1px solid rgba(16,23,32,.08); }
+		.figure-label { display:flex; align-items:center; min-height:42px; padding:0 14px; border-bottom:1px solid rgba(16,23,32,.08); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); background:rgba(252,248,241,.82); }
 		figure button { display:block; width:100%; border:0; padding:0; background:transparent; cursor:zoom-in; }
 		figure img { display:block; width:100%; height:auto; }
 		figcaption { padding:12px 14px; color:var(--muted); font-size:14px; background:rgba(255,255,255,.45); }
@@ -836,6 +854,8 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null) {
 		.scene-copy p { margin:0 0 12px; font-size:18px; color:#1f2c37; }
 		.scene-copy p:last-child { margin-bottom:0; }
 		.scene-subtitle { color:var(--accent); font-weight:700; }
+		.scene-proof-path { color:var(--muted); font-size:15px; }
+		.scene-proof-path code { font-size:14px; }
 		.lightbox { position:fixed; inset:0; display:none; place-items:center; padding:28px; background:rgba(15,23,42,.86); z-index:100; }
 		.lightbox.open { display:grid; }
 		.lightbox img { max-width:96vw; max-height:92vh; border-radius:8px; box-shadow:0 22px 70px rgba(0,0,0,.42); }
@@ -846,6 +866,8 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null) {
 			.scene-meta { display:block; }
 			.scene-time { margin-top:14px; text-align:left; }
 			.scene-meta h2 { font-size:28px; }
+			.media-grid { grid-template-columns:1fr; }
+			figure + figure { border-left:0; border-top:1px solid rgba(16,23,32,.08); }
 		}
 	</style>
 </head>
@@ -1012,6 +1034,35 @@ async function synthesizeAudio() {
 	const narration = path.join(narrationDir, "graphify-real-demo-narration.mp3");
 	run("ffmpeg", ["-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c:a", "libmp3lame", "-q:a", "3", narration]);
 	return { narration, voiceProvider };
+}
+
+async function loadExistingStoryboardMeta() {
+	const storyboardFile = path.join(outDir, "real-demo-storyboard.json");
+	const scriptFile = path.join(narrationDir, "real-demo-script.md");
+	const raw = await fs.readFile(storyboardFile, "utf8").catch(() => "");
+	if (!raw) {
+		throw new Error("REUSE_FINAL_VIDEO=1 requires an existing real-demo-storyboard.json.");
+	}
+	const parsed = JSON.parse(raw);
+	const byId = new Map((parsed.scenes || []).map((scene) => [scene.id, scene]));
+	for (const scene of scenes) {
+		const prior = byId.get(scene.id);
+		if (typeof prior?.durationSec === "number" && Number.isFinite(prior.durationSec)) {
+			scene.durationSec = prior.durationSec;
+		}
+	}
+	if (scenes.some((scene) => typeof scene.durationSec !== "number" || !Number.isFinite(scene.durationSec))) {
+		throw new Error("Existing storyboard is missing scene durations required for reuse mode.");
+	}
+	let voiceProvider = typeof parsed.voiceProvider === "string" && parsed.voiceProvider.trim()
+		? parsed.voiceProvider.trim()
+		: "edge-tts";
+	if (voiceProvider === "edge-tts") {
+		const existingScript = await fs.readFile(scriptFile, "utf8").catch(() => "");
+		const match = existingScript.match(/^voice_provider:\s*(.+)$/m);
+		if (match?.[1]) voiceProvider = match[1].trim();
+	}
+	return { voiceProvider };
 }
 
 function stageHtml() {
@@ -1650,16 +1701,19 @@ async function main() {
 	await fs.mkdir(assetsDir, { recursive: true });
 	await fs.mkdir(recordingsDir, { recursive: true });
 	const data = await loadDemoData();
+	const reuseFinalVideo = process.env.REUSE_FINAL_VIDEO === "1";
+	const finalMp4 = path.join(recordingsDir, "graphify-real-demo-cut.mp4");
 	await fs.writeFile(path.join(outDir, "frame.md"), frameMarkdown(), "utf8");
 	await captureScreenshots(data);
-	const { narration, voiceProvider } = await synthesizeAudio();
+	const { narration, voiceProvider } = reuseFinalVideo
+		? { narration: path.join(narrationDir, "graphify-real-demo-narration.mp3"), ...(await loadExistingStoryboardMeta()) }
+		: await synthesizeAudio();
 	await fs.writeFile(path.join(outDir, "real-demo-stage.html"), stageHtml(), "utf8");
 	const md = blogMarkdown(data);
 	await fs.writeFile(path.join(outDir, "graphify-real-demo-blog.md"), md, "utf8");
 	await fs.writeFile(path.join(outDir, "graphify-real-demo-blog.html"), blogHtml(md), "utf8");
 	await fs.writeFile(path.join(outDir, "real-demo-storyboard.json"), JSON.stringify({ voiceProvider, scenes }, null, 2), "utf8");
-	const finalMp4 = path.join(recordingsDir, "graphify-real-demo-cut.mp4");
-	if (process.env.REUSE_FINAL_VIDEO === "1") {
+	if (reuseFinalVideo) {
 		await fs.access(finalMp4);
 	} else {
 		const stageVideo = await recordStage();
