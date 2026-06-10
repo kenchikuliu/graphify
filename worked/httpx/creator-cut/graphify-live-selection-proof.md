@@ -4,14 +4,16 @@
 
 - 视频：`recordings/graphify-live-selection-proof.mp4`
 - 页面：`https://github.com/kenchikuliu/graphify`
-- 总时长：`43.9s`
+- 长文页：`graphify-real-demo-blog.html`
+- 拆镜头页：`graphify-real-demo-scenes.html`
+- 总时长：`43.8s`
 - 步骤数：`3`
 
 ## 1. Repo Thesis
 
 ![Repo Thesis](screenshots/live-selection-hook.png)
 
-- 时间：1.0s - 15.0s
+- 时间：1.0s - 14.9s
 - 选区：x=70, y=391, w=808, h=48
 - 说明：我先圈这句，因为它把 graphify 的价值说得很直白：不是继续堆上下文，而是先还原结构。
 
@@ -19,7 +21,7 @@
 
 ![Compression Proof](screenshots/live-selection-quote.png)
 
-- 时间：15.0s - 27.9s
+- 时间：14.9s - 27.9s
 - 选区：x=70, y=615, w=808, h=48
 - 说明：这一段适合做 hook。它不是抽象理念，而是直接把收益压到一句话里。
 

@@ -41,10 +41,16 @@
 		.eyebrow::before { content:""; width:26px; height:2px; background:var(--signal); }
 		h1 { position:relative; margin:16px 0 18px; max-width:980px; font:700 clamp(48px,6vw,90px)/.94 var(--display); text-transform:uppercase; letter-spacing:0; }
 		header p { position:relative; max-width:760px; margin:0; color:var(--muted); font-size:21px; font-weight:500; }
-		.header-grid { position:relative; display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-top:30px; }
+		.header-grid { position:relative; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) 320px; gap:18px; margin-top:30px; align-items:stretch; }
 		.video-card, .facts { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.86); box-shadow:0 14px 36px rgba(16,23,32,.07); overflow:hidden; }
+		.video-card { display:flex; flex-direction:column; min-width:0; }
 		.video-card video { display:block; width:100%; height:auto; background:#111827; }
-		.video-card .video-copy { padding:14px 16px 18px; color:var(--muted); font-size:15px; }
+		.video-meta { display:grid; gap:10px; padding:14px 16px 18px; }
+		.video-label { color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+		.video-title { font:700 26px/1 var(--display); text-transform:uppercase; }
+		.video-copy { color:var(--muted); font-size:15px; }
+		.video-links { display:flex; flex-wrap:wrap; gap:10px; }
+		.video-links a { display:inline-flex; align-items:center; padding:9px 12px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(255,255,255,.55); text-decoration:none; font-weight:600; font-size:14px; }
 		.facts { padding:18px 20px; }
 		.facts h2 { margin:0 0 12px; font:700 24px/1 var(--display); text-transform:uppercase; }
 		.facts ul { margin:0; padding-left:18px; }
@@ -53,6 +59,11 @@
 		.links { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
 		.links a { display:inline-flex; align-items:center; padding:10px 14px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(252,248,241,.82); text-decoration:none; font-weight:600; }
 		.callout { margin:0 0 32px; padding:18px 20px; border:1px solid rgba(180,84,55,.22); background:rgba(180,84,55,.08); border-radius:var(--r-md); color:#6d3324; font-size:17px; line-height:1.6; }
+		.delivery-split { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:0 0 24px; }
+		.delivery-card { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.86); box-shadow:0 14px 34px rgba(16,23,32,.07); padding:18px 20px; }
+		.delivery-kicker { color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+		.delivery-card h2 { margin:0 0 10px; font:700 28px/1 var(--display); text-transform:uppercase; }
+		.delivery-card p { margin:0; font-size:16px; color:var(--muted); }
 		.scene-list { display:grid; gap:22px; }
 		.scene-card { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.92); box-shadow:0 14px 34px rgba(16,23,32,.07); overflow:hidden; }
 		.scene-meta { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; padding:18px 20px 12px; }
@@ -80,6 +91,7 @@
 			header { padding-left:24px; padding-right:24px; }
 			h1 { font-size:clamp(42px,12vw,72px); }
 			.header-grid { grid-template-columns:1fr; }
+			.delivery-split { grid-template-columns:1fr; }
 			.scene-meta { display:block; }
 			.scene-time { margin-top:14px; text-align:left; }
 			.scene-meta h2 { font-size:28px; }
@@ -94,9 +106,31 @@
 		<h1>一条视频，拆成可直接发布的图文步骤</h1>
 		<p>这个页面对应最终成片，每个镜头都保留了代表帧、时间段、标题判断和旁白，后面发博客时不用再从头拆。</p>
 		<div class="header-grid">
+			
 			<section class="video-card">
 				<video controls preload="metadata" src="recordings/graphify-real-demo-cut.mp4" poster="scene-frames/01-hook.png"></video>
-				<div class="video-copy">最终成片：7 个镜头，约 86.7 秒，配音来自 elevenlabs。</div>
+				<div class="video-meta">
+					<div class="video-label">creator cut</div>
+					<div class="video-title">讲解版成片</div>
+					<div class="video-copy">最终成片：7 个镜头，约 86.7 秒，配音来自 elevenlabs。</div>
+					<div class="video-links">
+						<a href="recordings/graphify-real-demo-cut.mp4">打开视频</a>
+						<a href="graphify-real-demo-blog.html">打开长文</a>
+					</div>
+				</div>
+			</section>
+			
+			<section class="video-card">
+				<video controls preload="metadata" src="recordings/graphify-live-selection-proof.mp4" poster="screenshots/live-selection-cover.png"></video>
+				<div class="video-meta">
+					<div class="video-label">native proof</div>
+					<div class="video-title">原生浏览器证据版</div>
+					<div class="video-copy">真实 GitHub 页面里的点击、浏览器 zoom 和文本拖选都保留下来了，适合单独拿去做证据补充。</div>
+					<div class="video-links">
+						<a href="graphify-live-selection-proof.html">打开 proof 页面</a>
+						<a href="recordings/graphify-live-selection-proof.mp4">打开 proof 视频</a>
+					</div>
+				</div>
 			</section>
 			<aside class="facts">
 				<h2>Publish Pack</h2>
@@ -108,7 +142,7 @@
 					<li>镜头数：7</li>
 					<li>原生 proof 页面：<a href="graphify-live-selection-proof.html">graphify-live-selection-proof.html</a></li>
 					<li>原生 proof 视频：<a href="recordings/graphify-live-selection-proof.mp4">recordings/graphify-live-selection-proof.mp4</a></li>
-					<li>原生 proof：4 步 / 43.9 秒</li>
+					<li>原生 proof：4 步 / 43.8 秒</li>
 				</ul>
 			</aside>
 		</div>
@@ -121,6 +155,19 @@
 			<a href="graphify-live-selection-proof.html">打开原生 proof</a>
 		</div>
 		<div class="callout">这版的重点不是再讲 README，而是直接按证据链发布：先结果，再报告，再查询，最后把 EXTRACTED / INFERRED 讲清楚。如果有人质疑 zoom 和选区是不是后期模拟，直接看原生浏览器 proof 那条。</div>
+		
+		<section class="delivery-split">
+			<article class="delivery-card">
+				<div class="delivery-kicker">讲解版</div>
+				<h2>用来发平台</h2>
+				<p>creator cut 负责把判断、证据链和节奏整理成一条可直接发布的视频。它更像成片，而不是证据存档。</p>
+			</article>
+			<article class="delivery-card">
+				<div class="delivery-kicker">证据版</div>
+				<h2>用来回击质疑</h2>
+				<p>native proof 只做一件事：证明这些点击、缩放和拖选确实发生在原生浏览器里，不是后期盖上去的效果。</p>
+			</article>
+		</section>
 		<section class="scene-list">
 			
 		<article class="scene-card">

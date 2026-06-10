@@ -1,7 +1,7 @@
 {
   "source": "https://github.com/kenchikuliu/graphify",
-  "generatedAt": "2026-06-10T13:54:59.761Z",
-  "durationSec": 43.866667,
+  "generatedAt": "2026-06-10T14:36:02.585Z",
+  "durationSec": 43.833333,
   "capture": {
     "offsetX": 80,
     "offsetY": 40,
@@ -26,8 +26,8 @@
         "width": 808,
         "height": 48
       },
-      "startSec": 1,
-      "endSec": 14.962
+      "startSec": 0.995,
+      "endSec": 14.912
     },
     {
       "id": "quote",
@@ -41,8 +41,8 @@
         "width": 808,
         "height": 48
       },
-      "startSec": 15,
-      "endSec": 27.881
+      "startSec": 14.94,
+      "endSec": 27.869
     },
     {
       "id": "pipeline",
@@ -56,8 +56,8 @@
         "width": 808,
         "height": 64
       },
-      "startSec": 27.92,
-      "endSec": 41.435
+      "startSec": 27.911,
+      "endSec": 41.386
     }
   ]
 }

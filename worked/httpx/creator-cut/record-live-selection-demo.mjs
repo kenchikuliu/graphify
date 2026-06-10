@@ -453,6 +453,8 @@ function proofMarkdown(events, durationSec) {
 
 - 视频：\`recordings/graphify-live-selection-proof.mp4\`
 - 页面：\`https://github.com/kenchikuliu/graphify\`
+- 长文页：\`graphify-real-demo-blog.html\`
+- 拆镜头页：\`graphify-real-demo-scenes.html\`
 - 总时长：\`${durationSec.toFixed(1)}s\`
 - 步骤数：\`${events.length}\`
 
@@ -469,8 +471,12 @@ ${events.map((event, index) => `## ${index + 1}. ${event.label}
 
 function proofHtml(events, durationSec) {
 	const confidenceStill = "screenshots/live-selection-confidence.png";
+	const stepChips = [
+		...events.map((event, index) => `<a href="#step-${index + 1}">${String(index + 1).padStart(2, "0")}. ${htmlEscape(event.label)}</a>`),
+		`<a href="#step-confidence">04. Confidence Split</a>`,
+	].join("");
 	const cards = events.map((event, index) => `
-		<article class="step-card">
+		<article class="step-card" id="step-${index + 1}">
 			<div class="step-meta">
 				<div>
 					<div class="step-kicker">native proof</div>
@@ -526,7 +532,16 @@ function proofHtml(events, durationSec) {
 		.facts ul { margin:0; padding-left:18px; }
 		.facts li { margin:0 0 10px; font-size:16px; color:#1f2c37; }
 		main { max-width:1040px; margin:0 auto; padding:42px 24px 92px; }
+		.links { display:flex; flex-wrap:wrap; gap:12px; margin:0 0 24px; }
+		.links a { display:inline-flex; align-items:center; padding:10px 14px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(252,248,241,.82); text-decoration:none; font-weight:600; }
 		.callout { margin:0 0 32px; padding:18px 20px; border:1px solid rgba(180,84,55,.22); background:rgba(180,84,55,.08); border-radius:14px; color:#6d3324; font-size:17px; line-height:1.6; }
+		.proof-split { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:0 0 24px; }
+		.proof-card { border:1px solid rgba(16,23,32,.08); border-radius:14px; background:rgba(252,248,241,.88); box-shadow:0 14px 34px rgba(16,23,32,.07); padding:18px 20px; }
+		.proof-card h2 { margin:0 0 10px; font:700 28px/1 var(--display); text-transform:uppercase; }
+		.proof-card p { margin:0; font-size:16px; color:var(--muted); }
+		.proof-card .card-kicker { color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+		.step-chips { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 24px; }
+		.step-chips a { display:inline-flex; align-items:center; padding:9px 12px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(255,255,255,.55); text-decoration:none; font-weight:600; font-size:14px; }
 		.step-list { display:grid; gap:22px; }
 		.step-card { border:1px solid rgba(16,23,32,.08); border-radius:14px; background:rgba(252,248,241,.92); box-shadow:0 14px 34px rgba(16,23,32,.07); overflow:hidden; }
 		.step-meta { display:flex; justify-content:space-between; gap:18px; padding:18px 20px 12px; }
@@ -540,6 +555,7 @@ function proofHtml(events, durationSec) {
 			header { padding-left:24px; padding-right:24px; }
 			h1 { font-size:clamp(42px,12vw,72px); }
 			.header-grid { grid-template-columns:1fr; }
+			.proof-split { grid-template-columns:1fr; }
 			.step-meta { display:block; }
 			.step-time { margin-top:12px; display:block; }
 			.step-meta h2 { font-size:28px; }
@@ -562,17 +578,39 @@ function proofHtml(events, durationSec) {
 					<li>视频：<a href="recordings/graphify-live-selection-proof.mp4">graphify-live-selection-proof.mp4</a></li>
 					<li>事件：<a href="live-selection-events.json">live-selection-events.json</a></li>
 					<li>Markdown：<a href="graphify-live-selection-proof.md">graphify-live-selection-proof.md</a></li>
+					<li>长文页：<a href="graphify-real-demo-blog.html">graphify-real-demo-blog.html</a></li>
+					<li>拆镜头页：<a href="graphify-real-demo-scenes.html">graphify-real-demo-scenes.html</a></li>
 					<li>来源：<a href="${htmlEscape(REPO_URL)}">${htmlEscape(REPO_URL)}</a></li>
-					<li>步骤数：${events.length}</li>
+					<li>live steps：${events.length}</li>
+					<li>proof items：${events.length + 1}</li>
 				</ul>
 			</aside>
 		</div>
 	</header>
 	<main>
 		<div class="callout">这条 proof 的用途很明确：补足 creator cut 里最容易被质疑的部分，也就是“选区和 zoom 是不是原生浏览器效果”。</div>
+		<div class="links">
+			<a href="graphify-real-demo-blog.html">打开长文页</a>
+			<a href="graphify-real-demo-scenes.html">打开拆镜头页</a>
+			<a href="graphify-live-selection-proof.md">打开 proof Markdown</a>
+			<a href="live-selection-events.json">打开 events JSON</a>
+		</div>
+		<section class="proof-split">
+			<article class="proof-card">
+				<div class="card-kicker">creator cut</div>
+				<h2>讲判断和节奏</h2>
+				<p>主视频适合直接发平台，因为它把论点、例子和节奏都整理好了，观众不需要知道每一步鼠标是怎么动的。</p>
+			</article>
+			<article class="proof-card">
+				<div class="card-kicker">native proof</div>
+				<h2>讲原生动作证据</h2>
+				<p>proof 页则专门保留原生浏览器里的点击、缩放和拖选过程。要发博客、推文或回评论区时，它比成片更像证据库。</p>
+			</article>
+		</section>
+		<nav class="step-chips">${stepChips}</nav>
 		<section class="step-list">
 			${cards}
-			<article class="step-card">
+			<article class="step-card" id="step-confidence">
 				<div class="step-meta">
 					<div>
 						<div class="step-kicker">static proof</div>

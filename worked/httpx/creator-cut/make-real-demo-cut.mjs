@@ -811,6 +811,45 @@ ${timeline.map((scene) => `## ${scene.index}. ${scene.title}
 function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null, nativeProof = null) {
 	const timeline = sceneTimeline(totalDurationOverride);
 	const totalDurationSec = timeline.length ? timeline[timeline.length - 1].endSec : 0;
+	const creatorVideoCard = `
+			<section class="video-card">
+				<video controls preload="metadata" src="recordings/graphify-real-demo-cut.mp4" poster="${timeline[0] ? timeline[0].frameFile : ""}"></video>
+				<div class="video-meta">
+					<div class="video-label">creator cut</div>
+					<div class="video-title">讲解版成片</div>
+					<div class="video-copy">最终成片：${timeline.length} 个镜头，约 ${totalDurationSec.toFixed(1)} 秒，配音来自 ${htmlEscape(voiceProvider)}。</div>
+					<div class="video-links">
+						<a href="recordings/graphify-real-demo-cut.mp4">打开视频</a>
+						<a href="graphify-real-demo-blog.html">打开长文</a>
+					</div>
+				</div>
+			</section>`;
+	const nativeProofCard = nativeProof ? `
+			<section class="video-card">
+				<video controls preload="metadata" src="${htmlEscape(nativeProof.video)}" poster="${htmlEscape(nativeProof.cover)}"></video>
+				<div class="video-meta">
+					<div class="video-label">native proof</div>
+					<div class="video-title">原生浏览器证据版</div>
+					<div class="video-copy">真实 GitHub 页面里的点击、浏览器 zoom 和文本拖选都保留下来了，适合单独拿去做证据补充。</div>
+					<div class="video-links">
+						<a href="${htmlEscape(nativeProof.html)}">打开 proof 页面</a>
+						<a href="${htmlEscape(nativeProof.video)}">打开 proof 视频</a>
+					</div>
+				</div>
+			</section>` : "";
+	const deliverySplit = nativeProof ? `
+		<section class="delivery-split">
+			<article class="delivery-card">
+				<div class="delivery-kicker">讲解版</div>
+				<h2>用来发平台</h2>
+				<p>creator cut 负责把判断、证据链和节奏整理成一条可直接发布的视频。它更像成片，而不是证据存档。</p>
+			</article>
+			<article class="delivery-card">
+				<div class="delivery-kicker">证据版</div>
+				<h2>用来回击质疑</h2>
+				<p>native proof 只做一件事：证明这些点击、缩放和拖选确实发生在原生浏览器里，不是后期盖上去的效果。</p>
+			</article>
+		</section>` : "";
 	const cards = timeline.map((scene) => `
 		<article class="scene-card">
 			<div class="scene-meta">
@@ -867,10 +906,16 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null, nativeP
 		.eyebrow::before { content:""; width:26px; height:2px; background:var(--signal); }
 		h1 { position:relative; margin:16px 0 18px; max-width:980px; font:700 clamp(48px,6vw,90px)/.94 var(--display); text-transform:uppercase; letter-spacing:0; }
 		header p { position:relative; max-width:760px; margin:0; color:var(--muted); font-size:21px; font-weight:500; }
-		.header-grid { position:relative; display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-top:30px; }
+		.header-grid { position:relative; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) 320px; gap:18px; margin-top:30px; align-items:stretch; }
 		.video-card, .facts { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.86); box-shadow:0 14px 36px rgba(16,23,32,.07); overflow:hidden; }
+		.video-card { display:flex; flex-direction:column; min-width:0; }
 		.video-card video { display:block; width:100%; height:auto; background:#111827; }
-		.video-card .video-copy { padding:14px 16px 18px; color:var(--muted); font-size:15px; }
+		.video-meta { display:grid; gap:10px; padding:14px 16px 18px; }
+		.video-label { color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+		.video-title { font:700 26px/1 var(--display); text-transform:uppercase; }
+		.video-copy { color:var(--muted); font-size:15px; }
+		.video-links { display:flex; flex-wrap:wrap; gap:10px; }
+		.video-links a { display:inline-flex; align-items:center; padding:9px 12px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(255,255,255,.55); text-decoration:none; font-weight:600; font-size:14px; }
 		.facts { padding:18px 20px; }
 		.facts h2 { margin:0 0 12px; font:700 24px/1 var(--display); text-transform:uppercase; }
 		.facts ul { margin:0; padding-left:18px; }
@@ -879,6 +924,11 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null, nativeP
 		.links { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
 		.links a { display:inline-flex; align-items:center; padding:10px 14px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(252,248,241,.82); text-decoration:none; font-weight:600; }
 		.callout { margin:0 0 32px; padding:18px 20px; border:1px solid rgba(180,84,55,.22); background:rgba(180,84,55,.08); border-radius:var(--r-md); color:#6d3324; font-size:17px; line-height:1.6; }
+		.delivery-split { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:0 0 24px; }
+		.delivery-card { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.86); box-shadow:0 14px 34px rgba(16,23,32,.07); padding:18px 20px; }
+		.delivery-kicker { color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+		.delivery-card h2 { margin:0 0 10px; font:700 28px/1 var(--display); text-transform:uppercase; }
+		.delivery-card p { margin:0; font-size:16px; color:var(--muted); }
 		.scene-list { display:grid; gap:22px; }
 		.scene-card { border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.92); box-shadow:0 14px 34px rgba(16,23,32,.07); overflow:hidden; }
 		.scene-meta { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; padding:18px 20px 12px; }
@@ -906,6 +956,7 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null, nativeP
 			header { padding-left:24px; padding-right:24px; }
 			h1 { font-size:clamp(42px,12vw,72px); }
 			.header-grid { grid-template-columns:1fr; }
+			.delivery-split { grid-template-columns:1fr; }
 			.scene-meta { display:block; }
 			.scene-time { margin-top:14px; text-align:left; }
 			.scene-meta h2 { font-size:28px; }
@@ -920,10 +971,8 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null, nativeP
 		<h1>一条视频，拆成可直接发布的图文步骤</h1>
 		<p>这个页面对应最终成片，每个镜头都保留了代表帧、时间段、标题判断和旁白，后面发博客时不用再从头拆。</p>
 		<div class="header-grid">
-			<section class="video-card">
-				<video controls preload="metadata" src="recordings/graphify-real-demo-cut.mp4" poster="${timeline[0] ? timeline[0].frameFile : ""}"></video>
-				<div class="video-copy">最终成片：${timeline.length} 个镜头，约 ${totalDurationSec.toFixed(1)} 秒，配音来自 ${htmlEscape(voiceProvider)}。</div>
-			</section>
+			${creatorVideoCard}
+			${nativeProofCard}
 			<aside class="facts">
 				<h2>Publish Pack</h2>
 				<ul>
@@ -947,6 +996,7 @@ function sceneBreakdownHtml(voiceProvider, totalDurationOverride = null, nativeP
 			${nativeProof ? `<a href="${htmlEscape(nativeProof.html)}">打开原生 proof</a>` : ""}
 		</div>
 		<div class="callout">这版的重点不是再讲 README，而是直接按证据链发布：先结果，再报告，再查询，最后把 EXTRACTED / INFERRED 讲清楚。${nativeProof ? "如果有人质疑 zoom 和选区是不是后期模拟，直接看原生浏览器 proof 那条。": ""}</div>
+		${deliverySplit}
 		<section class="scene-list">
 			${cards}
 		</section>
@@ -1579,10 +1629,20 @@ Source: https://github.com/kenchikuliu/graphify
 `;
 }
 
-function markdownToHtml(markdown) {
+function markdownToHtml(markdown, options = {}) {
+	const { dropFirstH1 = false, leadParagraph = false } = options;
 	const tokens = markdown.split(/\n{2,}/).map((block) => block.trim()).filter(Boolean);
+	let h1Seen = false;
+	let leadUsed = false;
 	return tokens.map((block) => {
-		if (block.startsWith("# ")) return `<h1>${htmlEscape(block.slice(2))}</h1>`;
+		if (block.startsWith("# ")) {
+			if (dropFirstH1 && !h1Seen) {
+				h1Seen = true;
+				return "";
+			}
+			h1Seen = true;
+			return `<h1>${htmlEscape(block.slice(2))}</h1>`;
+		}
 		if (block.startsWith("## ")) return `<h2>${htmlEscape(block.slice(3))}</h2>`;
 		if (block.startsWith("```")) {
 			const code = block.replace(/^```[a-z]*\n?|\n?```$/g, "");
@@ -1599,11 +1659,29 @@ function markdownToHtml(markdown) {
 		if (/^\d+\.\s/m.test(block)) {
 			return `<ol>${block.split(/\n/).map((line) => `<li>${formatInline(line.replace(/^\d+\.\s+/, ""))}</li>`).join("")}</ol>`;
 		}
+		if (leadParagraph && !leadUsed) {
+			leadUsed = true;
+			return `<p class="lede">${formatInline(block)}</p>`;
+		}
 		return `<p>${formatInline(block)}</p>`;
 	}).join("\n");
 }
 
 function blogHtml(markdown, nativeProof = null) {
+	const publishStrip = `
+		<section class="publish-strip">
+			<div class="publish-note">
+				<div class="publish-kicker">publish bundle</div>
+				<p>这套内容已经拆成三层：讲解版负责叙事，场景页负责后续拆稿，${nativeProof ? "native proof 负责证明点击、缩放和文本拖选都是真的浏览器行为。": "图文页负责沉淀可复用的发布稿。"}</p>
+			</div>
+			<div class="publish-links">
+				<a href="graphify-real-demo-scenes.html">拆镜头页</a>
+				<a href="graphify-real-demo-blog.md">Markdown</a>
+				<a href="recordings/graphify-real-demo-cut.mp4">成片视频</a>
+				${nativeProof ? `<a href="${htmlEscape(nativeProof.html)}">原生 proof</a>` : ""}
+				<a href="https://github.com/kenchikuliu/graphify">Source Repo</a>
+			</div>
+		</section>`;
 	const proofPanel = nativeProof ? `
 		<section class="proof-band">
 			<article class="proof-card">
@@ -1649,12 +1727,14 @@ function blogHtml(markdown, nativeProof = null) {
 		hero-strap b, .hero-strap b { display:block; font-family:var(--display); font-size:24px; text-transform:uppercase; line-height:1; margin-bottom:12px; }
 		hero-strap p, .hero-strap p { margin:0; font-size:16px; color:var(--muted); }
 		main { position:relative; max-width:920px; margin:0 auto; padding:56px 24px 96px; z-index:1; }
+		.article-body { display:grid; gap:0; }
 		h1 { margin:0 0 30px; font-family:var(--display); font-size:54px; line-height:.98; letter-spacing:0; text-transform:uppercase; }
 		h2 { margin:60px 0 16px; font-family:var(--display); font-size:38px; line-height:.98; letter-spacing:0; text-transform:uppercase; }
 		p, li { font-size:19px; color:#1f2c37; }
+		.lede { margin:0 0 28px; font-size:26px; line-height:1.5; color:#1a2731; font-weight:500; }
 		code { font-family:var(--mono); background:rgba(31,94,215,.08); padding:2px 5px; border-radius:5px; }
 		pre { padding:18px; border-radius:var(--r-md); background:#101824; color:#e5e7eb; overflow:auto; border:1px solid rgba(255,255,255,.08); }
-		pre code { background:transparent; padding:0; color:inherit; }
+		pre code { background:transparent; padding:0; color:inherit; white-space:pre-wrap; word-break:break-word; }
 		ul, ol { padding-left:24px; }
 		figure { margin:38px 0; border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); overflow:hidden; background:rgba(252,248,241,.9); box-shadow:0 14px 34px rgba(16,23,32,.07); }
 		figure button { display:block; width:100%; padding:0; border:0; cursor:zoom-in; background:transparent; }
@@ -1669,6 +1749,11 @@ function blogHtml(markdown, nativeProof = null) {
 		.proof-kicker { padding:14px 16px 8px; color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; }
 		.proof-links { display:flex; gap:10px; flex-wrap:wrap; padding:0 16px 18px; }
 		.proof-links a { display:inline-flex; align-items:center; padding:9px 12px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(255,255,255,.55); text-decoration:none; font-weight:600; font-size:14px; }
+		.publish-strip { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:18px; margin:0 0 34px; padding:18px 20px; border:1px solid rgba(16,23,32,.08); border-radius:var(--r-md); background:rgba(252,248,241,.86); box-shadow:0 14px 34px rgba(16,23,32,.07); }
+		.publish-kicker { color:var(--signal); font:700 12px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+		.publish-note p { margin:0; font-size:16px; color:var(--muted); }
+		.publish-links { display:flex; flex-wrap:wrap; gap:10px; align-content:flex-start; }
+		.publish-links a { display:inline-flex; align-items:center; padding:9px 12px; border:1px solid rgba(16,23,32,.12); border-radius:999px; background:rgba(255,255,255,.55); text-decoration:none; font-weight:600; font-size:14px; }
 		.lightbox { position:fixed; inset:0; display:none; place-items:center; padding:28px; background:rgba(15,23,42,.86); z-index:100; }
 		.lightbox.open { display:grid; }
 		.lightbox img { max-width:96vw; max-height:92vh; border-radius:8px; box-shadow:0 22px 70px rgba(0,0,0,.42); }
@@ -1676,9 +1761,11 @@ function blogHtml(markdown, nativeProof = null) {
 			header { padding-left:24px; padding-right:24px; }
 			.hero-strap { grid-template-columns:1fr; }
 			.proof-band { grid-template-columns:1fr; }
+			.publish-strip { grid-template-columns:1fr; }
 			header h1 { font-size:clamp(46px,13vw,72px); }
 			h1 { font-size:46px; }
 			h2 { font-size:34px; }
+			.lede { font-size:23px; }
 		}
 	</style>
 </head>
@@ -1701,7 +1788,10 @@ function blogHtml(markdown, nativeProof = null) {
 	<main>
 		<div class="callout">这篇不是“我看了 README 后的感受”，而是一次实测复盘：先看产物，再判断它是否真的适合放进 Agent 工作流。</div>
 		${proofPanel}
-		${markdownToHtml(markdown)}
+		${publishStrip}
+		<article class="article-body">
+			${markdownToHtml(markdown, { dropFirstH1: true, leadParagraph: true })}
+		</article>
 	</main>
 	<div class="lightbox" id="lightbox"><img alt="" /></div>
 	<script>
