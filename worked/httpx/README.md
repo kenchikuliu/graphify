@@ -40,4 +40,8 @@ Then open your AI coding assistant in this directory and type:
 
 The graph value on a small corpus is structural, not compressive: you can see the full dependency graph, identify god nodes, and understand architecture at a glance. Token reduction scales with corpus size — at 52 files (Karpathy benchmark) graphify achieves 71.5x.
 
+## Creator cut
+
+The video/blog release package for this example lives in [`creator-cut/index.html`](creator-cut/index.html). It includes the final walkthrough video, the image-text article, the scene-by-scene page, native browser proof, representative frames, and the source files used to build the package.
+
 Run `graphify benchmark worked/httpx/graph.json` to verify the numbers. Actual output is in this folder: `GRAPH_REPORT.md` and `graph.json`. Full eval: `review.md`.

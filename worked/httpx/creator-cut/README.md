@@ -9,6 +9,8 @@
 
 ## 主要产物
 
+- `index.html`
+  发布包入口，集中播放最终视频，并链接到图文、分镜、原生 proof、代表帧和源数据
 - `recordings/graphify-real-demo-cut.mp4`
   最终成片，当前时长约 86.7 秒
 - `recordings/graphify-live-selection-proof.mp4`
