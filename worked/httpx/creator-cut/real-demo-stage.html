@@ -54,15 +54,20 @@
 		.frame { position:absolute; left:38px; top:96px; width:805px; height:453px; border-radius:var(--r-md); overflow:hidden; background:white; border:1px solid rgba(16,23,32,.10); box-shadow:0 28px 76px rgba(15,23,42,.16); z-index:2; }
 		.frame-tag { position:absolute; top:18px; right:18px; z-index:10; display:inline-flex; align-items:center; gap:8px; padding:8px 12px 7px; border-radius:999px; background:rgba(252,248,241,.92); border:1px solid rgba(16,23,32,.10); color:var(--scene-support); font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; box-shadow:0 10px 22px rgba(15,23,42,.10); transition:color .3s ease, transform .36s ease, opacity .3s ease; }
 		.frame-tag::before { content:""; width:8px; height:8px; border-radius:999px; background:var(--scene-accent); box-shadow:0 0 0 4px rgba(var(--scene-focus-rgb), .10); transition:background .3s ease, box-shadow .3s ease; }
+		.frame-rail { position:absolute; left:18px; right:18px; bottom:18px; z-index:10; display:flex; flex-wrap:wrap; gap:8px; pointer-events:none; opacity:0; transform:translateY(10px); }
+		.frame-rail .rail-chip { display:inline-flex; align-items:center; min-height:30px; padding:0 11px; border-radius:999px; font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.08em; }
+		.frame-rail[data-tone="light"] .rail-chip { background:rgba(252,248,241,.88); color:var(--ink); border:1px solid rgba(16,23,32,.10); box-shadow:0 8px 18px rgba(15,23,42,.08); }
+		.frame-rail[data-tone="dark"] .rail-chip { background:rgba(12,18,28,.82); color:rgba(252,248,241,.96); border:1px solid rgba(255,255,255,.16); box-shadow:0 8px 18px rgba(15,23,42,.16); }
+		.frame-rail .rail-chip.active { background:var(--scene-accent); color:white; border-color:transparent; box-shadow:0 10px 24px rgba(var(--scene-focus-rgb), .24); }
 		.viewport { position:absolute; inset:0; overflow:hidden; background:#0f1723; }
 		.media-scene { position:absolute; left:0; top:0; width:1365px; height:768px; transform-origin:top left; will-change:transform; transition:transform var(--scene-motion,7s) cubic-bezier(.16,.82,.22,1); }
 		.media-scene img { position:absolute; inset:0; width:1365px; height:768px; object-fit:cover; object-position:left top; filter:saturate(1.04) contrast(1.02); }
-		.frame.fade { opacity:0; transform:translate3d(-14px, 18px, 0) scale(.984) rotate(-.35deg); transition:opacity .36s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+		.frame.fade { opacity:0; transform:translate3d(-14px, 18px, 0) scale(.984) rotate(-.35deg); transition:opacity .36s ease var(--frame-delay,0s), transform .5s cubic-bezier(.2,.8,.2,1) var(--frame-delay,0s); }
 		.stage.scene-on .frame.fade { opacity:1; transform:translateY(0) scale(1) rotate(0deg); }
 		.panel { position:absolute; right:34px; top:76px; width:382px; min-height:418px; border:1px solid rgba(16,23,32,.10); border-radius:var(--r-md); background:var(--scene-panel-bg); box-shadow:0 20px 56px rgba(15,23,42,.12); padding:22px 24px 22px; z-index:9; overflow:hidden; transition:background .35s ease; }
 		.panel::before { content:""; position:absolute; top:0; left:0; width:100%; height:6px; background:linear-gradient(90deg,var(--scene-accent),var(--scene-support),var(--scene-warm)); }
 		.panel::after { content:attr(data-watermark); position:absolute; right:24px; bottom:20px; color:rgba(var(--scene-focus-rgb), .14); font-family:var(--display); font-size:44px; text-transform:uppercase; line-height:.9; pointer-events:none; transition:color .3s ease; }
-		.panel.fade { opacity:0; transform:translateX(26px) translateY(12px); transition:opacity .34s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+		.panel.fade { opacity:0; transform:translateX(26px) translateY(12px); transition:opacity .34s ease var(--panel-delay,0s), transform .5s cubic-bezier(.2,.8,.2,1) var(--panel-delay,0s); }
 		.stage.scene-on .panel.fade { opacity:1; transform:translateX(0) translateY(0); }
 		.panel-meta { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
 		.panel-label { display:inline-flex; align-items:center; gap:8px; min-height:30px; padding:6px 11px; border-radius:999px; border:1px solid rgba(var(--scene-focus-rgb), .18); background:rgba(255,255,255,.58); color:var(--scene-accent); font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; transition:border-color .3s ease, color .3s ease; }
@@ -139,7 +144,8 @@
 		.selection-dom[data-theme="light"] .selection-dom-text { color:transparent; }
 		.selection-dom .selection-dom-text::selection { background:rgba(79,131,255,.72); color:transparent; }
 		.selection-dom[data-theme="light"] .selection-dom-text::selection { background:rgba(79,131,255,.34); color:transparent; }
-		.stage.scene-on .focus, .stage.scene-on .selection, .stage.scene-on .selection-dom { opacity:1; transform:scale(1); transition:opacity .22s ease .24s, transform .34s ease .24s; }
+		.stage.scene-on .focus { opacity:1; transform:scale(1); transition:opacity .22s ease var(--focus-delay,.24s), transform .34s ease var(--focus-delay,.24s); }
+		.stage.scene-on .selection, .stage.scene-on .selection-dom { opacity:1; transform:scale(1); transition:opacity .22s ease var(--selection-delay,.24s), transform .34s ease var(--selection-delay,.24s); }
 		.stage.scene-on .selection .selection-line { opacity:1; transform:scaleX(1); filter:saturate(1.04) brightness(1.02); }
 		.cursor { position:absolute; z-index:30; width:34px; height:34px; left:var(--cx,690px); top:var(--cy,300px); filter:drop-shadow(0 8px 11px rgba(15,23,42,.35)); transition:left var(--cursor-move-duration) cubic-bezier(.18,.84,.22,1),top var(--cursor-move-duration) cubic-bezier(.18,.84,.22,1); }
 		.cursor::before { content:""; position:absolute; width:0; height:0; border-left:22px solid #111827; border-bottom:29px solid transparent; }
@@ -166,6 +172,15 @@
 		.progress span { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--scene-support),var(--scene-accent),var(--scene-warm)); transition:background .3s ease; }
 		.fade { opacity:0; transform:translateY(12px); transition:opacity .3s ease, transform .36s ease; }
 		.stage.scene-on .fade { opacity:1; transform:translateY(0); }
+		.frame-tag.fade { opacity:0; transform:translateY(-10px) scale(.98); transition:opacity .28s ease var(--frame-tag-delay,.18s), transform .36s cubic-bezier(.2,.8,.2,1) var(--frame-tag-delay,.18s); }
+		.stage.scene-on .frame-tag.fade { opacity:1; transform:translateY(0) scale(1); }
+		.stage.scene-on .frame-rail.has-items { opacity:1; transform:translateY(0); transition:opacity .26s ease var(--rail-delay,.9s), transform .34s cubic-bezier(.2,.8,.2,1) var(--rail-delay,.9s); }
+		.outro-stamp { position:absolute; right:24px; bottom:24px; z-index:11; display:grid; gap:4px; max-width:320px; padding:16px 18px 14px; border-radius:14px; pointer-events:none; opacity:0; transform:translateY(14px) scale(.98); }
+		.outro-stamp b { margin:0; font-family:var(--display); font-size:34px; line-height:.92; letter-spacing:0; }
+		.outro-stamp span { font-size:14px; font-weight:600; letter-spacing:.02em; }
+		.outro-stamp[data-tone="dark"] { background:rgba(12,18,28,.92); color:rgba(252,248,241,.96); border:1px solid rgba(255,255,255,.14); box-shadow:0 18px 36px rgba(15,23,42,.26); }
+		.outro-stamp[data-tone="light"] { background:rgba(252,248,241,.96); color:var(--ink); border:1px solid rgba(16,23,32,.10); box-shadow:0 18px 36px rgba(15,23,42,.14); }
+		.stage.scene-on .outro-stamp.ready { opacity:1; transform:translateY(0) scale(1); transition:opacity .28s ease var(--outro-delay,1.8s), transform .38s cubic-bezier(.2,.8,.2,1) var(--outro-delay,1.8s); }
 		@keyframes focusPulse {
 			0%,100% { box-shadow:0 0 0 10px rgba(var(--scene-focus-rgb), .08), 0 18px 40px rgba(var(--scene-focus-rgb), .14); }
 			50% { box-shadow:0 0 0 14px rgba(var(--scene-focus-rgb), .07), 0 24px 44px rgba(var(--scene-focus-rgb), .18); }
@@ -210,6 +225,8 @@
 				</div>
 			</div>
 			<div class="frame-tag fade"></div>
+			<div class="frame-rail"></div>
+			<div class="outro-stamp"><b></b><span></span></div>
 		</div>
 		<div class="rule"></div>
 		<div class="panel fade" data-watermark="FIELD NOTE">
@@ -234,7 +251,7 @@
 		const VIEW_W = 805;
 		const VIEW_H = 453;
 		const FIT_SCALE = Math.max(VIEW_W / SOURCE_W, VIEW_H / SOURCE_H);
-		const scenes = [{"id":"hook","image":"screenshots/01-graph-html.png","panelLabel":"THESIS","panelWatermark":"THESIS","panelTone":"cobalt","frameTag":"interactive graph","focusLabel":"graph canvas","transitionVariant":"wash","kicker":"实测判断","title":"AI 读大项目缺的不是更长上下文","subtitle":"它先需要一张能追问的地图。","caption":"我这版直接看 graphify 的真实输出：graph.html、GRAPH_REPORT.md、graph.json 和 query 结果。","narration":"这一版我不再复述 README，直接看 graphify 的真实输出。我的判断是：AI 读大项目迷路，不一定是上下文不够，它先需要一张能追问的地图。","focus":{"x":272,"y":126,"w":612,"h":438},"cursor":{"from":[720,240],"to":[620,360]},"cursorPulse":"end","cursorMoveDelayMs":520,"cursorMoveDurationMs":840,"cameraBias":{"startDriftX":58,"startDriftY":28,"centerX":-28,"centerY":-16,"maxScale":1.24,"fillX":0.76,"fillY":0.8,"pushIn":0.16},"durationSec":9.288625},{"id":"outputs","image":"screenshots/02-output-proof.png","panelLabel":"EVIDENCE","panelWatermark":"EVIDENCE","panelTone":"signal","frameTag":"4 deliverables","focusLabel":"proof outputs","transitionVariant":"band","kicker":"证据链","title":"我只认这四个产物","subtitle":"图给人看，报告给 Agent 定向，JSON 给查询。","caption":"这次用 worked/httpx 示例：144 nodes、330 edges、6 communities，报告和 JSON 统计一致。","narration":"我只认这四个产物。graph 点 html 给人点开看，GRAPH_REPORT 点 md 给 Agent 定向，graph 点 json 作为查询底座，再加一条 graphify query 的结果。这个 httpx 示例是 144 个节点，330 条边，6 个社区。","focus":{"x":58,"y":313,"w":690,"h":412},"cursor":{"from":[175,315],"to":[535,455]},"cursorPulse":"end","cursorMoveDelayMs":520,"cursorMoveDurationMs":980,"cameraBias":{"startDriftX":-42,"startDriftY":26,"centerY":22,"maxScale":1.16,"fillX":0.84,"fillY":0.84,"pushIn":0.14},"durationSec":15.701208},{"id":"report","image":"screenshots/03-report-proof.png","layout":"flip","panelLabel":"AGENT ROUTE","panelWatermark":"ROUTE","panelTone":"sun","frameTag":"god nodes first","focusLabel":"god nodes","transitionVariant":"sweep","kicker":"报告","title":"GRAPH_REPORT.md 像一张读项目路线图","panelTitle":"GRAPH_REPORT.MD\n像一张读项目路线图","subtitle":"先告诉你 god nodes，再告诉你哪些连接值得怀疑。","caption":"Client、AsyncClient、Response、Request 这些节点被排在最前面，Agent 不必从文件树盲扫。","narration":"GRAPH_REPORT 点 md 最适合给 Agent 先读。它先把 god nodes 排出来，Client、AsyncClient、Response、Request 都在前面。也就是说，Agent 不必从文件树盲扫，而是先知道架构主线在哪里。","focus":{"x":620,"y":198,"w":688,"h":472},"cameraBox":{"x":34,"y":192,"w":1268,"h":500},"cursor":{"from":[1030,185],"to":[890,335]},"cursorPulse":"end","cursorMoveDelayMs":560,"cursorMoveDurationMs":820,"panelTitleSize":38,"cameraBias":{"startDriftX":12,"startDriftY":6,"centerX":-14,"centerY":-8,"maxScale":1.02,"fillX":0.98,"fillY":0.9,"pushIn":0.02},"durationSec":13.529333},{"id":"graph","image":"screenshots/01-graph-html.png","panelLabel":"MAP READ","panelWatermark":"MAP","panelTone":"cobalt","frameTag":"community lens","focusLabel":"community list","transitionVariant":"sweep","kicker":"可视化","title":"graph.html 不是装饰图","subtitle":"右侧社区列表让你直接看模块边界。","caption":"中心的大节点和右侧社区一起看，能快速发现 Client 如何跨 transport、auth、models 和 errors。","narration":"graph 点 html 也不是装饰图。你看右侧社区列表，再看中心的大节点，就能很快发现 Client 是怎么跨 transport、auth、models 和 errors 的。这个画面比单纯看目录更像地图。","focus":{"x":1092,"y":194,"w":242,"h":212},"cameraBox":{"x":842,"y":148,"w":482,"h":356},"cursor":{"from":[1120,250],"to":[1165,422]},"cursorPulse":"end","cursorMoveDelayMs":520,"cursorMoveDurationMs":780,"cameraBias":{"startDriftX":62,"startDriftY":-28,"centerX":30,"centerY":-8,"maxScale":1.26,"fillX":0.72,"fillY":0.8,"pushIn":0.18},"durationSec":12.702458},{"id":"query","image":"screenshots/04-query-client.png","layout":"flip","panelLabel":"SUBGRAPH PROOF","panelWatermark":"QUERY","panelTone":"night","frameTag":"traceable subgraph","transitionVariant":"band","kicker":"查询","title":"query 返回的是子图，不是一句漂亮摘要","subtitle":"NODE 和 EDGE 都带来源、位置和关系。","caption":"这就适合接到真实工作流：先拿局部结构，再回到源码复核。","narration":"更关键的是 query。它返回的不是一句漂亮摘要，而是一段子图。NODE 有来源文件和行号，EDGE 有关系和置信标记。真实工作流里，你可以先拿局部结构，再回到源码复核。","focus":{"x":56,"y":214,"w":1228,"h":218},"focusVisible":false,"cameraBox":{"x":44,"y":218,"w":1172,"h":196},"selection":{"x":62,"y":262,"w":504,"h":66},"selectionLines":[{"x":64,"y":260,"w":452,"h":34,"delay":0.18,"duration":0.34},{"x":64,"y":292,"w":498,"h":34,"delay":0.36,"duration":0.4}],"selectionTheme":"dark","selectionDom":{"x":66,"y":260,"w":760,"h":62,"fontSize":16,"lineHeight":1.46,"text":"NODE Client [src=worked/httpx/raw/client.py loc=L70 community=2]\nNODE AsyncClient [src=worked/httpx/raw/client.py loc=L123 community=2]","delay":0.4,"duration":0.68,"theme":"dark"},"cursor":{"from":[170,270],"to":[825,280]},"cursorPulse":"start","cursorMoveDelayMs":680,"cursorMoveDurationMs":1150,"cameraBias":{"startDriftX":-72,"startDriftY":12,"centerY":-6,"maxScale":1.26,"fillX":0.82,"fillY":0.72,"pushIn":0.18},"durationSec":12.205957999999999},{"id":"confidence","image":"screenshots/05-confidence.png","panelLabel":"TRUST SPLIT","panelWatermark":"TRUST","panelTone":"clay","frameTag":"extracted vs inferred","transitionVariant":"wash","kicker":"我最看重","title":"关系有置信度，才方便复核","panelTitle":"关系有置信度\n才方便复核","subtitle":"EXTRACTED 和 INFERRED 分开，减少幻觉污染。","caption":"这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。","narration":"我最看重的是置信度。EXTRACTED 是原文抽到的，INFERRED 是模型推断的。一个工具愿意把这两类分开，才适合给 AI assistant 用，因为你知道哪些地方需要复核。","focus":{"x":704,"y":246,"w":582,"h":294},"focusVisible":false,"cameraBox":{"x":40,"y":236,"w":1260,"h":454},"selection":{"x":712,"y":307,"w":512,"h":66},"selectionLines":[{"x":712,"y":306,"w":492,"h":32,"delay":0.2,"duration":0.32},{"x":712,"y":338,"w":454,"h":32,"delay":0.38,"duration":0.34}],"selectionTheme":"light","cursor":{"from":[890,348],"to":[1210,348]},"cursorPulse":"start","cursorMoveDelayMs":620,"cursorMoveDurationMs":980,"panelTitleSize":38,"cameraBias":{"startDriftX":-10,"startDriftY":8,"centerX":-6,"centerY":10,"maxScale":1.04,"fillX":0.97,"fillY":0.9,"pushIn":0.04},"durationSec":11.168833},{"id":"close","image":"screenshots/02-output-proof.png","layout":"flip","panelLabel":"RELEASE CUT","panelWatermark":"RELEASE","panelTone":"night","frameTag":"publish stack","focusLabel":"publish bundle","transitionVariant":"curtain","kicker":"发布角度","title":"这篇就按“实测证据链”来写","subtitle":"先结果，再报告，再查询，最后讲接入方式。","caption":"一句话结论：给 Agent 地图，而不是无休止塞上下文。","narration":"所以这篇图文和视频，我会按实测证据链来写：先看结果，再看报告，再看查询，最后讲怎么接到 Agent 工作流。结论就一句话：给 Agent 地图，而不是无休止塞上下文。","focus":{"x":78,"y":617,"w":646,"h":108},"cursor":{"from":[540,580],"to":[310,590]},"cursorPulse":"end","cursorMoveDelayMs":620,"cursorMoveDurationMs":880,"cameraBias":{"startDriftX":24,"startDriftY":32,"centerX":-12,"centerY":18,"maxScale":1.14,"fillX":0.82,"fillY":0.72,"pushIn":0.12},"durationSec":11.831}];
+		const scenes = [{"id":"hook","image":"screenshots/01-graph-html.png","panelLabel":"THESIS","panelWatermark":"THESIS","panelTone":"cobalt","frameTag":"interactive graph","focusLabel":"graph canvas","transitionVariant":"wash","frameTagDelayMs":220,"focusDelayMs":640,"kicker":"实测判断","title":"AI 读大项目缺的不是更长上下文","subtitle":"它先需要一张能追问的地图。","caption":"我这版直接看 graphify 的真实输出：graph.html、GRAPH_REPORT.md、graph.json 和 query 结果。","narration":"这一版我不再复述 README，直接看 graphify 的真实输出。我的判断是：AI 读大项目迷路，不一定是上下文不够，它先需要一张能追问的地图。","focus":{"x":272,"y":126,"w":612,"h":438},"cursor":{"from":[720,240],"to":[620,360]},"cursorPulse":"end","cursorMoveDelayMs":520,"cursorMoveDurationMs":840,"cameraBias":{"startDriftX":58,"startDriftY":28,"centerX":-28,"centerY":-16,"maxScale":1.24,"fillX":0.76,"fillY":0.8,"pushIn":0.16},"durationSec":9.288625},{"id":"outputs","image":"screenshots/02-output-proof.png","panelLabel":"EVIDENCE","panelWatermark":"EVIDENCE","panelTone":"signal","frameTag":"4 deliverables","focusLabel":"proof outputs","transitionVariant":"band","frameTagDelayMs":240,"focusDelayMs":820,"frameRailItems":["graph.html","report.md","graph.json","query"],"frameRailTone":"light","frameRailActiveIndex":3,"frameRailDelayMs":980,"kicker":"证据链","title":"我只认这四个产物","subtitle":"图给人看，报告给 Agent 定向，JSON 给查询。","caption":"这次用 worked/httpx 示例：144 nodes、330 edges、6 communities，报告和 JSON 统计一致。","narration":"我只认这四个产物。graph 点 html 给人点开看，GRAPH_REPORT 点 md 给 Agent 定向，graph 点 json 作为查询底座，再加一条 graphify query 的结果。这个 httpx 示例是 144 个节点，330 条边，6 个社区。","focus":{"x":58,"y":313,"w":690,"h":412},"cursor":{"from":[175,315],"to":[535,455]},"cursorPulse":"end","cursorMoveDelayMs":520,"cursorMoveDurationMs":980,"cameraBias":{"startDriftX":-42,"startDriftY":26,"centerY":22,"maxScale":1.16,"fillX":0.84,"fillY":0.84,"pushIn":0.14},"durationSec":15.701208},{"id":"report","image":"screenshots/03-report-proof.png","layout":"flip","panelLabel":"AGENT ROUTE","panelWatermark":"ROUTE","panelTone":"sun","frameTag":"god nodes first","focusLabel":"god nodes","transitionVariant":"sweep","frameTagDelayMs":260,"focusDelayMs":1080,"kicker":"报告","title":"GRAPH_REPORT.md 像一张读项目路线图","panelTitle":"GRAPH_REPORT.MD\n像一张读项目路线图","subtitle":"先告诉你 god nodes，再告诉你哪些连接值得怀疑。","caption":"Client、AsyncClient、Response、Request 这些节点被排在最前面，Agent 不必从文件树盲扫。","narration":"GRAPH_REPORT 点 md 最适合给 Agent 先读。它先把 god nodes 排出来，Client、AsyncClient、Response、Request 都在前面。也就是说，Agent 不必从文件树盲扫，而是先知道架构主线在哪里。","focus":{"x":620,"y":198,"w":688,"h":472},"cameraBox":{"x":34,"y":192,"w":1268,"h":500},"cursor":{"from":[1030,185],"to":[890,335]},"cursorPulse":"end","cursorMoveDelayMs":560,"cursorMoveDurationMs":820,"panelTitleSize":38,"cameraBias":{"startDriftX":12,"startDriftY":6,"centerX":-14,"centerY":-8,"maxScale":1.02,"fillX":0.98,"fillY":0.9,"pushIn":0.02},"durationSec":13.529333},{"id":"graph","image":"screenshots/01-graph-html.png","panelLabel":"MAP READ","panelWatermark":"MAP","panelTone":"cobalt","frameTag":"community lens","focusLabel":"community list","transitionVariant":"sweep","frameTagDelayMs":260,"focusDelayMs":940,"kicker":"可视化","title":"graph.html 不是装饰图","subtitle":"右侧社区列表让你直接看模块边界。","caption":"中心的大节点和右侧社区一起看，能快速发现 Client 如何跨 transport、auth、models 和 errors。","narration":"graph 点 html 也不是装饰图。你看右侧社区列表，再看中心的大节点，就能很快发现 Client 是怎么跨 transport、auth、models 和 errors 的。这个画面比单纯看目录更像地图。","focus":{"x":1092,"y":194,"w":242,"h":212},"cameraBox":{"x":842,"y":148,"w":482,"h":356},"cursor":{"from":[1120,250],"to":[1165,422]},"cursorPulse":"end","cursorMoveDelayMs":520,"cursorMoveDurationMs":780,"cameraBias":{"startDriftX":62,"startDriftY":-28,"centerX":30,"centerY":-8,"maxScale":1.26,"fillX":0.72,"fillY":0.8,"pushIn":0.18},"durationSec":12.702458},{"id":"query","image":"screenshots/04-query-client.png","layout":"flip","panelLabel":"SUBGRAPH PROOF","panelWatermark":"QUERY","panelTone":"night","frameTag":"traceable subgraph","transitionVariant":"band","frameTagDelayMs":240,"selectionDelayMs":440,"kicker":"查询","title":"query 返回的是子图，不是一句漂亮摘要","subtitle":"NODE 和 EDGE 都带来源、位置和关系。","caption":"这就适合接到真实工作流：先拿局部结构，再回到源码复核。","narration":"更关键的是 query。它返回的不是一句漂亮摘要，而是一段子图。NODE 有来源文件和行号，EDGE 有关系和置信标记。真实工作流里，你可以先拿局部结构，再回到源码复核。","focus":{"x":56,"y":214,"w":1228,"h":218},"focusVisible":false,"cameraBox":{"x":44,"y":218,"w":1172,"h":196},"selection":{"x":62,"y":262,"w":504,"h":66},"selectionLines":[{"x":64,"y":260,"w":452,"h":34,"delay":0.18,"duration":0.34},{"x":64,"y":292,"w":498,"h":34,"delay":0.36,"duration":0.4}],"selectionTheme":"dark","selectionDom":{"x":66,"y":260,"w":760,"h":62,"fontSize":16,"lineHeight":1.46,"text":"NODE Client [src=worked/httpx/raw/client.py loc=L70 community=2]\nNODE AsyncClient [src=worked/httpx/raw/client.py loc=L123 community=2]","delay":0.4,"duration":0.68,"theme":"dark"},"cursor":{"from":[170,270],"to":[825,280]},"cursorPulse":"start","cursorMoveDelayMs":680,"cursorMoveDurationMs":1150,"cameraBias":{"startDriftX":-72,"startDriftY":12,"centerY":-6,"maxScale":1.26,"fillX":0.82,"fillY":0.72,"pushIn":0.18},"durationSec":12.205957999999999},{"id":"confidence","image":"screenshots/05-confidence.png","panelLabel":"TRUST SPLIT","panelWatermark":"TRUST","panelTone":"clay","frameTag":"extracted vs inferred","transitionVariant":"wash","frameTagDelayMs":240,"selectionDelayMs":520,"kicker":"我最看重","title":"关系有置信度，才方便复核","panelTitle":"关系有置信度\n才方便复核","subtitle":"EXTRACTED 和 INFERRED 分开，减少幻觉污染。","caption":"这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。","narration":"我最看重的是置信度。EXTRACTED 是原文抽到的，INFERRED 是模型推断的。一个工具愿意把这两类分开，才适合给 AI assistant 用，因为你知道哪些地方需要复核。","focus":{"x":704,"y":246,"w":582,"h":294},"focusVisible":false,"cameraBox":{"x":40,"y":236,"w":1260,"h":454},"selection":{"x":712,"y":307,"w":512,"h":66},"selectionLines":[{"x":712,"y":306,"w":492,"h":32,"delay":0.2,"duration":0.32},{"x":712,"y":338,"w":454,"h":32,"delay":0.38,"duration":0.34}],"selectionTheme":"light","cursor":{"from":[890,348],"to":[1210,348]},"cursorPulse":"start","cursorMoveDelayMs":620,"cursorMoveDurationMs":980,"panelTitleSize":38,"cameraBias":{"startDriftX":-10,"startDriftY":8,"centerX":-6,"centerY":10,"maxScale":1.04,"fillX":0.97,"fillY":0.9,"pushIn":0.04},"durationSec":11.168833},{"id":"close","image":"screenshots/02-output-proof.png","layout":"flip","panelLabel":"RELEASE CUT","panelWatermark":"RELEASE","panelTone":"night","frameTag":"publish stack","focusLabel":"publish bundle","transitionVariant":"curtain","frameTagDelayMs":240,"focusDelayMs":760,"frameRailItems":["先结果","再报告","再查询","最后复核"],"frameRailTone":"dark","frameRailActiveIndex":3,"frameRailDelayMs":980,"outroStamp":"给 Agent 地图","outroNote":"不是继续堆上下文","outroTone":"dark","outroStampDelayMs":2460,"kicker":"发布角度","title":"这篇就按“实测证据链”来写","subtitle":"先结果，再报告，再查询，最后讲接入方式。","caption":"一句话结论：给 Agent 地图，而不是无休止塞上下文。","narration":"所以这篇图文和视频，我会按实测证据链来写：先看结果，再看报告，再看查询，最后讲怎么接到 Agent 工作流。结论就一句话：给 Agent 地图，而不是无休止塞上下文。","focus":{"x":78,"y":617,"w":646,"h":108},"cursor":{"from":[540,580],"to":[310,590]},"cursorPulse":"end","cursorMoveDelayMs":620,"cursorMoveDurationMs":880,"cameraBias":{"startDriftX":24,"startDriftY":32,"centerX":-12,"centerY":18,"maxScale":1.14,"fillX":0.82,"fillY":0.72,"pushIn":0.12},"durationSec":11.831}];
 		const sceneThemes = {"cobalt":{"accent":"#1f5ed7","support":"#0d6d66","warm":"#b88426","panelBg":"rgba(252,248,241,.93)","washA":"rgba(31,94,215,.12)","washB":"rgba(13,109,102,.10)","focusRgb":"31,94,215"},"signal":{"accent":"#0d6d66","support":"#1f5ed7","warm":"#b88426","panelBg":"rgba(250,247,239,.94)","washA":"rgba(13,109,102,.14)","washB":"rgba(184,132,38,.10)","focusRgb":"13,109,102"},"sun":{"accent":"#b88426","support":"#0d6d66","warm":"#1f5ed7","panelBg":"rgba(252,248,239,.94)","washA":"rgba(184,132,38,.13)","washB":"rgba(31,94,215,.08)","focusRgb":"184,132,38"},"clay":{"accent":"#b45437","support":"#1f5ed7","warm":"#0d6d66","panelBg":"rgba(252,247,241,.94)","washA":"rgba(180,84,55,.13)","washB":"rgba(31,94,215,.09)","focusRgb":"180,84,55"},"night":{"accent":"#0d1726","support":"#b45437","warm":"#1f5ed7","panelBg":"rgba(250,246,239,.95)","washA":"rgba(13,23,38,.12)","washB":"rgba(31,94,215,.11)","focusRgb":"31,94,215"}};
 		const transitionVariants = ["sweep", "wash", "band", "curtain"];
 		const totalDuration = 86.42741500000001;
@@ -243,6 +260,10 @@
 		const mediaScene = document.querySelector(".media-scene");
 		const img = document.querySelector(".media-scene img");
 		const frameTag = document.querySelector(".frame-tag");
+		const frameRail = document.querySelector(".frame-rail");
+		const outroStamp = document.querySelector(".outro-stamp");
+		const outroStampTitle = outroStamp.querySelector("b");
+		const outroStampNote = outroStamp.querySelector("span");
 		const panel = document.querySelector(".panel");
 		const panelLabel = document.querySelector(".panel-label");
 		const panelPage = document.querySelector(".panel-page");
@@ -284,6 +305,9 @@
 			pendingTimers.push(timer);
 			return timer;
 		}
+		function formatDelayMs(value, fallbackMs = 0) {
+			return (((typeof value === "number" ? value : fallbackMs)) / 1000).toFixed(3) + "s";
+		}
 		function applySceneTheme(scene) {
 			const theme = sceneThemes[scene.panelTone] || sceneThemes.cobalt;
 			stage.style.setProperty("--scene-accent", theme.accent);
@@ -300,6 +324,15 @@
 				stage.classList.remove("transition-" + variant);
 			}
 			stage.classList.add("transition-" + (scene.transitionVariant || "sweep"));
+		}
+		function applySceneDelays(scene) {
+			stage.style.setProperty("--frame-delay", formatDelayMs(scene.frameDelayMs, 0));
+			stage.style.setProperty("--panel-delay", formatDelayMs(scene.panelDelayMs, 30));
+			stage.style.setProperty("--frame-tag-delay", formatDelayMs(scene.frameTagDelayMs, 180));
+			stage.style.setProperty("--focus-delay", formatDelayMs(scene.focusDelayMs, 240));
+			stage.style.setProperty("--selection-delay", formatDelayMs(scene.selectionDelayMs, 240));
+			stage.style.setProperty("--rail-delay", formatDelayMs(scene.frameRailDelayMs, 900));
+			stage.style.setProperty("--outro-delay", formatDelayMs(scene.outroStampDelayMs, 1800));
 		}
 		function fitFrame(scale, centerX, centerY) {
 			const renderScale = FIT_SCALE * scale;
@@ -393,13 +426,14 @@
 			setBox(selection, scene.selection);
 			selection.style.display = "block";
 			selection.dataset.theme = scene.selectionTheme || "";
+			const baseDelaySec = (scene.selectionDelayMs || 240) / 1000;
 			const lines = scene.selectionLines?.length
 				? scene.selectionLines
 				: [{ x: scene.selection.x, y: scene.selection.y, w: scene.selection.w, h: scene.selection.h, delay: 0.22, duration: 0.4 }];
 			selection.innerHTML = lines.map((line) => {
 				const relX = line.x - scene.selection.x;
 				const relY = line.y - scene.selection.y;
-				return '<div class="selection-line" style="--lx:' + Math.round(relX) + 'px;--ly:' + Math.round(relY) + 'px;--lw:' + Math.round(line.w) + 'px;--lh:' + Math.round(line.h) + 'px;--delay:' + (line.delay || 0) + 's;--duration:' + (line.duration || 0.36) + 's;"></div>';
+				return '<div class="selection-line" style="--lx:' + Math.round(relX) + 'px;--ly:' + Math.round(relY) + 'px;--lw:' + Math.round(line.w) + 'px;--lh:' + Math.round(line.h) + 'px;--delay:' + (baseDelaySec + (line.delay || 0)).toFixed(3) + 's;--duration:' + (line.duration || 0.36) + 's;"></div>';
 			}).join("");
 		}
 		function clearSelectionDom() {
@@ -417,6 +451,7 @@
 				return;
 			}
 			const box = scene.selectionDom;
+			const baseDelaySec = (scene.selectionDelayMs || 240) / 1000;
 			setBox(selectionDom, box);
 			selectionDom.style.display = "block";
 			selectionDom.dataset.theme = box.theme || "";
@@ -442,9 +477,38 @@
 					setTimeout(() => {
 						selectionApi.removeAllRanges();
 						selectionApi.addRange(range);
-					}, Math.round((box.delay || 0.38) * 1000));
+					}, Math.round((baseDelaySec + (box.delay || 0.38)) * 1000));
 				});
 			});
+		}
+		function renderFrameRail(scene) {
+			frameRail.innerHTML = "";
+			frameRail.classList.remove("has-items");
+			frameRail.removeAttribute("data-tone");
+			frameRail.style.display = "none";
+			if (!Array.isArray(scene.frameRailItems) || scene.frameRailItems.length === 0) return;
+			frameRail.style.display = "flex";
+			frameRail.dataset.tone = scene.frameRailTone || "light";
+			scene.frameRailItems.forEach((item, index) => {
+				const chip = document.createElement("div");
+				chip.className = "rail-chip" + (index === scene.frameRailActiveIndex ? " active" : "");
+				chip.textContent = item;
+				frameRail.appendChild(chip);
+			});
+			frameRail.classList.add("has-items");
+		}
+		function renderOutroStamp(scene) {
+			outroStamp.classList.remove("ready");
+			outroStamp.style.display = "none";
+			outroStamp.removeAttribute("data-tone");
+			outroStampTitle.textContent = "";
+			outroStampNote.textContent = "";
+			if (!scene.outroStamp) return;
+			outroStamp.style.display = "grid";
+			outroStamp.dataset.tone = scene.outroTone || "dark";
+			outroStampTitle.textContent = scene.outroStamp;
+			outroStampNote.textContent = scene.outroNote || "";
+			outroStamp.classList.add("ready");
 		}
 		function projectPoint(cameraState, point) {
 			const x = frame.offsetLeft + cameraState.x + point[0] * cameraState.scale;
@@ -493,6 +557,7 @@
 			stage.classList.toggle("layout-flip", scene.layout === "flip");
 			applyTransitionVariant(scene);
 			applySceneTheme(scene);
+			applySceneDelays(scene);
 			setCursorDurations(scene);
 			const camera = resolveCamera(scene);
 			const cursorPath = deriveCursorPath(scene, camera);
@@ -512,6 +577,8 @@
 			setFocusBox(scene);
 			buildSelectionLines(scene);
 			buildSelectionDom(scene);
+			renderFrameRail(scene);
+			renderOutroStamp(scene);
 			cursor.style.setProperty("--cx", cursorPath.from.x.toFixed(1) + "px");
 			cursor.style.setProperty("--cy", cursorPath.from.y.toFixed(1) + "px");
 			cursorTrail.style.setProperty("--trail-x", cursorPath.from.x.toFixed(1) + "px");

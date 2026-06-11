@@ -292,12 +292,12 @@ async function loadNativeProofMeta() {
 	} catch {
 		parsed = {};
 	}
-	const cover = (await pathExists(path.join(screenshotsDir, "live-selection-cover.png")))
-		? "screenshots/live-selection-cover.png"
-		: "screenshots/01-graph-html.png";
 	const confidenceStill = (await pathExists(path.join(screenshotsDir, "live-selection-confidence.png")))
 		? "screenshots/live-selection-confidence.png"
 		: "";
+	const cover = confidenceStill || ((await pathExists(path.join(screenshotsDir, "live-selection-cover.png")))
+		? "screenshots/live-selection-cover.png"
+		: "screenshots/01-graph-html.png");
 	const events = Array.isArray(parsed.events) ? parsed.events : [];
 	return {
 		video: "recordings/graphify-live-selection-proof.mp4",
@@ -684,6 +684,8 @@ const scenes = [
 		frameTag: "interactive graph",
 		focusLabel: "graph canvas",
 		transitionVariant: "wash",
+		frameTagDelayMs: 220,
+		focusDelayMs: 640,
 		kicker: "实测判断",
 		title: "AI 读大项目缺的不是更长上下文",
 		subtitle: "它先需要一张能追问的地图。",
@@ -705,6 +707,12 @@ const scenes = [
 		frameTag: "4 deliverables",
 		focusLabel: "proof outputs",
 		transitionVariant: "band",
+		frameTagDelayMs: 240,
+		focusDelayMs: 820,
+		frameRailItems: ["graph.html", "report.md", "graph.json", "query"],
+		frameRailTone: "light",
+		frameRailActiveIndex: 3,
+		frameRailDelayMs: 980,
 		kicker: "证据链",
 		title: "我只认这四个产物",
 		subtitle: "图给人看，报告给 Agent 定向，JSON 给查询。",
@@ -727,6 +735,8 @@ const scenes = [
 		frameTag: "god nodes first",
 		focusLabel: "god nodes",
 		transitionVariant: "sweep",
+		frameTagDelayMs: 260,
+		focusDelayMs: 1080,
 		kicker: "报告",
 		title: "GRAPH_REPORT.md 像一张读项目路线图",
 		panelTitle: "GRAPH_REPORT.MD\n像一张读项目路线图",
@@ -751,6 +761,8 @@ const scenes = [
 		frameTag: "community lens",
 		focusLabel: "community list",
 		transitionVariant: "sweep",
+		frameTagDelayMs: 260,
+		focusDelayMs: 940,
 		kicker: "可视化",
 		title: "graph.html 不是装饰图",
 		subtitle: "右侧社区列表让你直接看模块边界。",
@@ -773,6 +785,8 @@ const scenes = [
 		panelTone: "night",
 		frameTag: "traceable subgraph",
 		transitionVariant: "band",
+		frameTagDelayMs: 240,
+		selectionDelayMs: 440,
 		kicker: "查询",
 		title: "query 返回的是子图，不是一句漂亮摘要",
 		subtitle: "NODE 和 EDGE 都带来源、位置和关系。",
@@ -813,6 +827,8 @@ const scenes = [
 		panelTone: "clay",
 		frameTag: "extracted vs inferred",
 		transitionVariant: "wash",
+		frameTagDelayMs: 240,
+		selectionDelayMs: 520,
 		kicker: "我最看重",
 		title: "关系有置信度，才方便复核",
 		panelTitle: "关系有置信度\n才方便复核",
@@ -845,6 +861,16 @@ const scenes = [
 		frameTag: "publish stack",
 		focusLabel: "publish bundle",
 		transitionVariant: "curtain",
+		frameTagDelayMs: 240,
+		focusDelayMs: 760,
+		frameRailItems: ["先结果", "再报告", "再查询", "最后复核"],
+		frameRailTone: "dark",
+		frameRailActiveIndex: 3,
+		frameRailDelayMs: 980,
+		outroStamp: "给 Agent 地图",
+		outroNote: "不是继续堆上下文",
+		outroTone: "dark",
+		outroStampDelayMs: 2460,
 		kicker: "发布角度",
 		title: "这篇就按“实测证据链”来写",
 		subtitle: "先结果，再报告，再查询，最后讲接入方式。",
@@ -1315,15 +1341,20 @@ function stageHtml() {
 		.frame { position:absolute; left:38px; top:96px; width:805px; height:453px; border-radius:var(--r-md); overflow:hidden; background:white; border:1px solid rgba(16,23,32,.10); box-shadow:0 28px 76px rgba(15,23,42,.16); z-index:2; }
 		.frame-tag { position:absolute; top:18px; right:18px; z-index:10; display:inline-flex; align-items:center; gap:8px; padding:8px 12px 7px; border-radius:999px; background:rgba(252,248,241,.92); border:1px solid rgba(16,23,32,.10); color:var(--scene-support); font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; box-shadow:0 10px 22px rgba(15,23,42,.10); transition:color .3s ease, transform .36s ease, opacity .3s ease; }
 		.frame-tag::before { content:""; width:8px; height:8px; border-radius:999px; background:var(--scene-accent); box-shadow:0 0 0 4px rgba(var(--scene-focus-rgb), .10); transition:background .3s ease, box-shadow .3s ease; }
+		.frame-rail { position:absolute; left:18px; right:18px; bottom:18px; z-index:10; display:flex; flex-wrap:wrap; gap:8px; pointer-events:none; opacity:0; transform:translateY(10px); }
+		.frame-rail .rail-chip { display:inline-flex; align-items:center; min-height:30px; padding:0 11px; border-radius:999px; font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.08em; }
+		.frame-rail[data-tone="light"] .rail-chip { background:rgba(252,248,241,.88); color:var(--ink); border:1px solid rgba(16,23,32,.10); box-shadow:0 8px 18px rgba(15,23,42,.08); }
+		.frame-rail[data-tone="dark"] .rail-chip { background:rgba(12,18,28,.82); color:rgba(252,248,241,.96); border:1px solid rgba(255,255,255,.16); box-shadow:0 8px 18px rgba(15,23,42,.16); }
+		.frame-rail .rail-chip.active { background:var(--scene-accent); color:white; border-color:transparent; box-shadow:0 10px 24px rgba(var(--scene-focus-rgb), .24); }
 		.viewport { position:absolute; inset:0; overflow:hidden; background:#0f1723; }
 		.media-scene { position:absolute; left:0; top:0; width:1365px; height:768px; transform-origin:top left; will-change:transform; transition:transform var(--scene-motion,7s) cubic-bezier(.16,.82,.22,1); }
 		.media-scene img { position:absolute; inset:0; width:1365px; height:768px; object-fit:cover; object-position:left top; filter:saturate(1.04) contrast(1.02); }
-		.frame.fade { opacity:0; transform:translate3d(-14px, 18px, 0) scale(.984) rotate(-.35deg); transition:opacity .36s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+		.frame.fade { opacity:0; transform:translate3d(-14px, 18px, 0) scale(.984) rotate(-.35deg); transition:opacity .36s ease var(--frame-delay,0s), transform .5s cubic-bezier(.2,.8,.2,1) var(--frame-delay,0s); }
 		.stage.scene-on .frame.fade { opacity:1; transform:translateY(0) scale(1) rotate(0deg); }
 		.panel { position:absolute; right:34px; top:76px; width:382px; min-height:418px; border:1px solid rgba(16,23,32,.10); border-radius:var(--r-md); background:var(--scene-panel-bg); box-shadow:0 20px 56px rgba(15,23,42,.12); padding:22px 24px 22px; z-index:9; overflow:hidden; transition:background .35s ease; }
 		.panel::before { content:""; position:absolute; top:0; left:0; width:100%; height:6px; background:linear-gradient(90deg,var(--scene-accent),var(--scene-support),var(--scene-warm)); }
 		.panel::after { content:attr(data-watermark); position:absolute; right:24px; bottom:20px; color:rgba(var(--scene-focus-rgb), .14); font-family:var(--display); font-size:44px; text-transform:uppercase; line-height:.9; pointer-events:none; transition:color .3s ease; }
-		.panel.fade { opacity:0; transform:translateX(26px) translateY(12px); transition:opacity .34s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+		.panel.fade { opacity:0; transform:translateX(26px) translateY(12px); transition:opacity .34s ease var(--panel-delay,0s), transform .5s cubic-bezier(.2,.8,.2,1) var(--panel-delay,0s); }
 		.stage.scene-on .panel.fade { opacity:1; transform:translateX(0) translateY(0); }
 		.panel-meta { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
 		.panel-label { display:inline-flex; align-items:center; gap:8px; min-height:30px; padding:6px 11px; border-radius:999px; border:1px solid rgba(var(--scene-focus-rgb), .18); background:rgba(255,255,255,.58); color:var(--scene-accent); font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; transition:border-color .3s ease, color .3s ease; }
@@ -1400,7 +1431,8 @@ function stageHtml() {
 		.selection-dom[data-theme="light"] .selection-dom-text { color:transparent; }
 		.selection-dom .selection-dom-text::selection { background:rgba(79,131,255,.72); color:transparent; }
 		.selection-dom[data-theme="light"] .selection-dom-text::selection { background:rgba(79,131,255,.34); color:transparent; }
-		.stage.scene-on .focus, .stage.scene-on .selection, .stage.scene-on .selection-dom { opacity:1; transform:scale(1); transition:opacity .22s ease .24s, transform .34s ease .24s; }
+		.stage.scene-on .focus { opacity:1; transform:scale(1); transition:opacity .22s ease var(--focus-delay,.24s), transform .34s ease var(--focus-delay,.24s); }
+		.stage.scene-on .selection, .stage.scene-on .selection-dom { opacity:1; transform:scale(1); transition:opacity .22s ease var(--selection-delay,.24s), transform .34s ease var(--selection-delay,.24s); }
 		.stage.scene-on .selection .selection-line { opacity:1; transform:scaleX(1); filter:saturate(1.04) brightness(1.02); }
 		.cursor { position:absolute; z-index:30; width:34px; height:34px; left:var(--cx,690px); top:var(--cy,300px); filter:drop-shadow(0 8px 11px rgba(15,23,42,.35)); transition:left var(--cursor-move-duration) cubic-bezier(.18,.84,.22,1),top var(--cursor-move-duration) cubic-bezier(.18,.84,.22,1); }
 		.cursor::before { content:""; position:absolute; width:0; height:0; border-left:22px solid #111827; border-bottom:29px solid transparent; }
@@ -1427,6 +1459,15 @@ function stageHtml() {
 		.progress span { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--scene-support),var(--scene-accent),var(--scene-warm)); transition:background .3s ease; }
 		.fade { opacity:0; transform:translateY(12px); transition:opacity .3s ease, transform .36s ease; }
 		.stage.scene-on .fade { opacity:1; transform:translateY(0); }
+		.frame-tag.fade { opacity:0; transform:translateY(-10px) scale(.98); transition:opacity .28s ease var(--frame-tag-delay,.18s), transform .36s cubic-bezier(.2,.8,.2,1) var(--frame-tag-delay,.18s); }
+		.stage.scene-on .frame-tag.fade { opacity:1; transform:translateY(0) scale(1); }
+		.stage.scene-on .frame-rail.has-items { opacity:1; transform:translateY(0); transition:opacity .26s ease var(--rail-delay,.9s), transform .34s cubic-bezier(.2,.8,.2,1) var(--rail-delay,.9s); }
+		.outro-stamp { position:absolute; right:24px; bottom:24px; z-index:11; display:grid; gap:4px; max-width:320px; padding:16px 18px 14px; border-radius:14px; pointer-events:none; opacity:0; transform:translateY(14px) scale(.98); }
+		.outro-stamp b { margin:0; font-family:var(--display); font-size:34px; line-height:.92; letter-spacing:0; }
+		.outro-stamp span { font-size:14px; font-weight:600; letter-spacing:.02em; }
+		.outro-stamp[data-tone="dark"] { background:rgba(12,18,28,.92); color:rgba(252,248,241,.96); border:1px solid rgba(255,255,255,.14); box-shadow:0 18px 36px rgba(15,23,42,.26); }
+		.outro-stamp[data-tone="light"] { background:rgba(252,248,241,.96); color:var(--ink); border:1px solid rgba(16,23,32,.10); box-shadow:0 18px 36px rgba(15,23,42,.14); }
+		.stage.scene-on .outro-stamp.ready { opacity:1; transform:translateY(0) scale(1); transition:opacity .28s ease var(--outro-delay,1.8s), transform .38s cubic-bezier(.2,.8,.2,1) var(--outro-delay,1.8s); }
 		@keyframes focusPulse {
 			0%,100% { box-shadow:0 0 0 10px rgba(var(--scene-focus-rgb), .08), 0 18px 40px rgba(var(--scene-focus-rgb), .14); }
 			50% { box-shadow:0 0 0 14px rgba(var(--scene-focus-rgb), .07), 0 24px 44px rgba(var(--scene-focus-rgb), .18); }
@@ -1471,6 +1512,8 @@ function stageHtml() {
 				</div>
 			</div>
 			<div class="frame-tag fade"></div>
+			<div class="frame-rail"></div>
+			<div class="outro-stamp"><b></b><span></span></div>
 		</div>
 		<div class="rule"></div>
 		<div class="panel fade" data-watermark="FIELD NOTE">
@@ -1504,6 +1547,10 @@ function stageHtml() {
 		const mediaScene = document.querySelector(".media-scene");
 		const img = document.querySelector(".media-scene img");
 		const frameTag = document.querySelector(".frame-tag");
+		const frameRail = document.querySelector(".frame-rail");
+		const outroStamp = document.querySelector(".outro-stamp");
+		const outroStampTitle = outroStamp.querySelector("b");
+		const outroStampNote = outroStamp.querySelector("span");
 		const panel = document.querySelector(".panel");
 		const panelLabel = document.querySelector(".panel-label");
 		const panelPage = document.querySelector(".panel-page");
@@ -1545,6 +1592,9 @@ function stageHtml() {
 			pendingTimers.push(timer);
 			return timer;
 		}
+		function formatDelayMs(value, fallbackMs = 0) {
+			return (((typeof value === "number" ? value : fallbackMs)) / 1000).toFixed(3) + "s";
+		}
 		function applySceneTheme(scene) {
 			const theme = sceneThemes[scene.panelTone] || sceneThemes.cobalt;
 			stage.style.setProperty("--scene-accent", theme.accent);
@@ -1561,6 +1611,15 @@ function stageHtml() {
 				stage.classList.remove("transition-" + variant);
 			}
 			stage.classList.add("transition-" + (scene.transitionVariant || "sweep"));
+		}
+		function applySceneDelays(scene) {
+			stage.style.setProperty("--frame-delay", formatDelayMs(scene.frameDelayMs, 0));
+			stage.style.setProperty("--panel-delay", formatDelayMs(scene.panelDelayMs, 30));
+			stage.style.setProperty("--frame-tag-delay", formatDelayMs(scene.frameTagDelayMs, 180));
+			stage.style.setProperty("--focus-delay", formatDelayMs(scene.focusDelayMs, 240));
+			stage.style.setProperty("--selection-delay", formatDelayMs(scene.selectionDelayMs, 240));
+			stage.style.setProperty("--rail-delay", formatDelayMs(scene.frameRailDelayMs, 900));
+			stage.style.setProperty("--outro-delay", formatDelayMs(scene.outroStampDelayMs, 1800));
 		}
 		function fitFrame(scale, centerX, centerY) {
 			const renderScale = FIT_SCALE * scale;
@@ -1654,13 +1713,14 @@ function stageHtml() {
 			setBox(selection, scene.selection);
 			selection.style.display = "block";
 			selection.dataset.theme = scene.selectionTheme || "";
+			const baseDelaySec = (scene.selectionDelayMs || 240) / 1000;
 			const lines = scene.selectionLines?.length
 				? scene.selectionLines
 				: [{ x: scene.selection.x, y: scene.selection.y, w: scene.selection.w, h: scene.selection.h, delay: 0.22, duration: 0.4 }];
 			selection.innerHTML = lines.map((line) => {
 				const relX = line.x - scene.selection.x;
 				const relY = line.y - scene.selection.y;
-				return '<div class="selection-line" style="--lx:' + Math.round(relX) + 'px;--ly:' + Math.round(relY) + 'px;--lw:' + Math.round(line.w) + 'px;--lh:' + Math.round(line.h) + 'px;--delay:' + (line.delay || 0) + 's;--duration:' + (line.duration || 0.36) + 's;"></div>';
+				return '<div class="selection-line" style="--lx:' + Math.round(relX) + 'px;--ly:' + Math.round(relY) + 'px;--lw:' + Math.round(line.w) + 'px;--lh:' + Math.round(line.h) + 'px;--delay:' + (baseDelaySec + (line.delay || 0)).toFixed(3) + 's;--duration:' + (line.duration || 0.36) + 's;"></div>';
 			}).join("");
 		}
 		function clearSelectionDom() {
@@ -1678,6 +1738,7 @@ function stageHtml() {
 				return;
 			}
 			const box = scene.selectionDom;
+			const baseDelaySec = (scene.selectionDelayMs || 240) / 1000;
 			setBox(selectionDom, box);
 			selectionDom.style.display = "block";
 			selectionDom.dataset.theme = box.theme || "";
@@ -1703,9 +1764,38 @@ function stageHtml() {
 					setTimeout(() => {
 						selectionApi.removeAllRanges();
 						selectionApi.addRange(range);
-					}, Math.round((box.delay || 0.38) * 1000));
+					}, Math.round((baseDelaySec + (box.delay || 0.38)) * 1000));
 				});
 			});
+		}
+		function renderFrameRail(scene) {
+			frameRail.innerHTML = "";
+			frameRail.classList.remove("has-items");
+			frameRail.removeAttribute("data-tone");
+			frameRail.style.display = "none";
+			if (!Array.isArray(scene.frameRailItems) || scene.frameRailItems.length === 0) return;
+			frameRail.style.display = "flex";
+			frameRail.dataset.tone = scene.frameRailTone || "light";
+			scene.frameRailItems.forEach((item, index) => {
+				const chip = document.createElement("div");
+				chip.className = "rail-chip" + (index === scene.frameRailActiveIndex ? " active" : "");
+				chip.textContent = item;
+				frameRail.appendChild(chip);
+			});
+			frameRail.classList.add("has-items");
+		}
+		function renderOutroStamp(scene) {
+			outroStamp.classList.remove("ready");
+			outroStamp.style.display = "none";
+			outroStamp.removeAttribute("data-tone");
+			outroStampTitle.textContent = "";
+			outroStampNote.textContent = "";
+			if (!scene.outroStamp) return;
+			outroStamp.style.display = "grid";
+			outroStamp.dataset.tone = scene.outroTone || "dark";
+			outroStampTitle.textContent = scene.outroStamp;
+			outroStampNote.textContent = scene.outroNote || "";
+			outroStamp.classList.add("ready");
 		}
 		function projectPoint(cameraState, point) {
 			const x = frame.offsetLeft + cameraState.x + point[0] * cameraState.scale;
@@ -1754,6 +1844,7 @@ function stageHtml() {
 			stage.classList.toggle("layout-flip", scene.layout === "flip");
 			applyTransitionVariant(scene);
 			applySceneTheme(scene);
+			applySceneDelays(scene);
 			setCursorDurations(scene);
 			const camera = resolveCamera(scene);
 			const cursorPath = deriveCursorPath(scene, camera);
@@ -1773,6 +1864,8 @@ function stageHtml() {
 			setFocusBox(scene);
 			buildSelectionLines(scene);
 			buildSelectionDom(scene);
+			renderFrameRail(scene);
+			renderOutroStamp(scene);
 			cursor.style.setProperty("--cx", cursorPath.from.x.toFixed(1) + "px");
 			cursor.style.setProperty("--cy", cursorPath.from.y.toFixed(1) + "px");
 			cursorTrail.style.setProperty("--trail-x", cursorPath.from.x.toFixed(1) + "px");

@@ -5,7 +5,7 @@
 - 视频：`recordings/graphify-real-demo-cut.mp4`
 - 长文：`graphify-real-demo-blog.md`
 - 配音：`elevenlabs`
-- 总时长：`01:24`（约 85.0 秒）
+- 总时长：`01:24`（约 84.4 秒）
 - 镜头数：`7`
 - 原生浏览器 proof：`recordings/graphify-live-selection-proof.mp4`（约 43.8 秒）
 - 原生 proof 页面：`graphify-live-selection-proof.html`
@@ -70,7 +70,7 @@
 
 ![query 返回的是子图，不是一句漂亮摘要 - 原始证据截图](screenshots/04-query-client.png)
 
-- 时间：00:50 - 01:02
+- 时间：00:50 - 01:01
 - Kicker：查询
 - Subtitle：NODE 和 EDGE 都带来源、位置和关系。
 - Caption：这就适合接到真实工作流：先拿局部结构，再回到源码复核。
@@ -83,7 +83,7 @@
 
 ![关系有置信度，才方便复核 - 原始证据截图](screenshots/05-confidence.png)
 
-- 时间：01:02 - 01:13
+- 时间：01:01 - 01:12
 - Kicker：我最看重
 - Subtitle：EXTRACTED 和 INFERRED 分开，减少幻觉污染。
 - Caption：这比“我帮你总结一下项目”更可靠，因为它承认哪些关系来自原文，哪些来自模型推断。
@@ -96,7 +96,7 @@
 
 ![这篇就按“实测证据链”来写 - 原始证据截图](screenshots/02-output-proof.png)
 
-- 时间：01:13 - 01:24
+- 时间：01:12 - 01:24
 - Kicker：发布角度
 - Subtitle：先结果，再报告，再查询，最后讲接入方式。
 - Caption：一句话结论：给 Agent 地图，而不是无休止塞上下文。
